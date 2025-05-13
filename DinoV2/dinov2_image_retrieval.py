@@ -34,10 +34,15 @@ To download this dataset, you will need a [free Roboflow account](https://app.ro
 _Note: You can provide any folder of images you want!_
 """
 
-!pip install roboflow faiss-gpu supervision -q
+"""
+Before:
+pip install roboflow faiss-cpu supervision -q"
+pip install roboflow
+roboflow login
 
 import roboflow
 import os
+
 
 roboflow.login()
 
@@ -45,10 +50,11 @@ rf = roboflow.Roboflow()
 
 project = rf.workspace("team-roboflow").project("coco-128")
 dataset = project.version(2).download("coco")
+"""
 
+import os
 cwd = os.getcwd()
-
-ROOT_DIR = os.path.join(cwd, "COCO-128-2/train/")
+ROOT_DIR = os.path.join(cwd, "C:/Users/franc/OneDrive/Desktop/Secondo semestre 24-25/Machine Learning/project/training/American_chameleon")
 
 files = os.listdir(ROOT_DIR)
 files = [os.path.join(ROOT_DIR, f) for f in files if f.lower().endswith(".jpg")]
@@ -110,7 +116,7 @@ def create_index(files: list) -> faiss.IndexFlatL2:
     all_embeddings = {}
 
     with torch.no_grad():
-      for i, file in enumerate(tqdm(files)):
+      for i, file in enumerate(files):
         embeddings = dinov2_vits14(load_image(file).to(device))
 
         embedding = embeddings[0].cpu().numpy()
@@ -149,7 +155,7 @@ We display the `k` top results (default 3) in the notebook.
 """
 
 # Commented out IPython magic to ensure Python compatibility.
-search_file = "COCO-128-2/valid/000000000081_jpg.rf.5262c2db56ea4568d7d32def1bde3d06.jpg"
+search_file = "C:/Users/franc/OneDrive/Desktop/Secondo semestre 24-25/Machine Learning/project/test/query/n01855672_10973.jpg"
 
 img = cv2.resize(cv2.imread(search_file), (416, 416))
 
