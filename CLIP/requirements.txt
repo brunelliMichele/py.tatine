@@ -1,4 +1,0 @@
-Pillow
-torch
-git+https://github.com/openai/CLIP.git
-matplotlib
