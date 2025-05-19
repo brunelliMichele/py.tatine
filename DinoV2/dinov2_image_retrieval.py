@@ -53,6 +53,7 @@ dataset = project.version(2).download("coco")
 """
 
 import os
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 cwd = os.getcwd()
 ROOT_DIR = os.path.join(cwd, "C:/Users/franc/OneDrive/Desktop/Secondo semestre 24-25/Machine Learning/project/training/American_chameleon")
 
