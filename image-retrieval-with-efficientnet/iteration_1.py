@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Sep  6 22:39:58 2023
+resnet 50
 
-@author: PRATIK
 """
 
 import numpy as np
