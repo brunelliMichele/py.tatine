@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 """
 Attempt with EfficientNet B4 model 
 """
@@ -9,7 +9,7 @@ import cv2
 import os
 from annoy import AnnoyIndex
 
-# Load a pre-trained EfficientNet model (you can change to a larger variant)
+
 efficientnet_model = tf.keras.applications.EfficientNetB4(
     include_top=False, weights='imagenet', input_shape=(224, 224, 3)
 )
@@ -18,64 +18,79 @@ model = tf.keras.Sequential([
     tf.keras.layers.GlobalAveragePooling2D(),
 ])
 
-# Define a function to preprocess an image and extract features
-def extract_features(image):
-    img = tf.keras.preprocessing.image.load_img(image, target_size=(224, 224))
+def extract_features(image_path):
+    img = tf.keras.preprocessing.image.load_img(image_path, target_size=(224, 224))
     img = tf.keras.preprocessing.image.img_to_array(img)
     img = tf.keras.applications.efficientnet.preprocess_input(img)
     img = np.expand_dims(img, axis=0)
     features = model.predict(img)
-    # Apply L2 normalization to the features
     features /= np.linalg.norm(features, axis=-1, keepdims=True)
-    return features
+    return features.flatten()
 
-# Define a directory containing the database of images to search through
-database_directory = "C:/Users/anna2/OneDrive/Desktop/Second semester/Intro_ML/Competition/training"
+def load_and_prepare_image(path, size=(224, 224)):
+    img = cv2.imread(path)
+    if img is None:
+        raise ValueError(f"Failed to load image: {path}")
+    img = cv2.resize(img, size)
+    if len(img.shape) == 2 or img.shape[2] == 1:
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+    return img
 
-# Extract features from all images in the database and cache them
-database_features = []
-database_filenames = []
-for root, dirs, files in os.walk(database_directory):
-    for filename in files:
-        if filename.endswith(".jpg"):
-            image_path = os.path.join(root, filename) 
-            features = extract_features(image_path)
-            database_features.append(features.flatten())
-            database_filenames.append(image_path) 
+def create_image_strip(query_path, similar_paths, size=(224, 224)):
+    query_img = load_and_prepare_image(query_path, size)
+    thickness = 5
+    color = (0, 0, 255)  # Red color in BGR
+    query_img = cv2.rectangle(query_img.copy(), (0, 0), (query_img.shape[1]-1, query_img.shape[0]-1), color, thickness)
 
-# Create an AnnoyIndex for approximate nearest neighbor search
-num_trees = 200  # Adjust this parameter for better accuracy
-feature_dim = len(database_features[0])
-annoy_index = AnnoyIndex(feature_dim, 'angular')  # Use cosine similarity
+    
+    images = [query_img]
+    for path in similar_paths:
+        img = load_and_prepare_image(path, size)
+        images.append(img)
 
-# Add database features to the AnnoyIndex
-for i, feature in enumerate(database_features):
-    annoy_index.add_item(i, feature)
+    # Use numpy concatenate horizontally
+    strip = np.concatenate(images, axis=1)
+    return strip
 
-# Build the index
-annoy_index.build(num_trees)
+# Directories
+base_data_dir = "data/test"
+gallery_dir = os.path.join(base_data_dir, "gallery")
+query_dir = os.path.join(base_data_dir, "query")
 
-# Load the query image
-query_index = np.random.choice(len(database_filenames))  
-query_image_path = database_filenames[query_index]       
-query_features = database_features[query_index]  
+gallery_images = [
+    os.path.join(root, file)
+    for root, _, files in os.walk(gallery_dir)
+    for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))
+]
 
-# Define the number of similar images to retrieve
-top_n = 5 
+print("Extracting gallery features...")
+gallery_features = [extract_features(p) for p in gallery_images]
 
-# Find the top N similar images
-similar_indices = annoy_index.get_nns_by_vector(query_features, top_n)
+feature_dim = len(gallery_features[0])
+annoy_index = AnnoyIndex(feature_dim, 'angular')
+for i, feat in enumerate(gallery_features):
+    annoy_index.add_item(i, feat)
+annoy_index.build(200)
+print("Annoy index built.")
 
-# Display the top N most similar images and their distances
-query_image = cv2.imread(query_image_path)
-for i, index in enumerate(similar_indices):
-    similar_image_filename = database_filenames[index]
-    similar_image_path = os.path.join(database_directory, similar_image_filename)
-    similar_image = cv2.imread(similar_image_path)
-    # Calculate the distance manually
-    distance = np.linalg.norm(query_features - database_features[index])
-    print(f"Similar Image {i + 1}: Distance - {distance}")
-    cv2.imshow(f"Similar Image {i + 1}", similar_image)
+query_images = [
+    os.path.join(root, file)
+    for root, _, files in os.walk(query_dir)
+    for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))
+]
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+top_n = 10
+
+for i, query_path in enumerate(query_images):
+    print(f"\nProcessing query {i+1}/{len(query_images)}: {os.path.basename(query_path)}")
+    query_feature = extract_features(query_path)
+    similar_idxs = annoy_index.get_nns_by_vector(query_feature, top_n)
+    similar_paths = [gallery_images[idx] for idx in similar_idxs]
+
+    strip_img = create_image_strip(query_path, similar_paths)
+    cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
+
+    print("Showing query images with top 10 similar gallery images.")
+    cv2.waitKey(2000)
+    
+
