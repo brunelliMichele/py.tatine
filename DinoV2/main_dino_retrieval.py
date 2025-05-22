@@ -12,7 +12,7 @@ import torchvision.transforms as T
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
-OUTPUT_FILE = os.path.join(BASE_DIR, "submission_dino.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
 TOP_K = 3
 
 # Trasformazioni
