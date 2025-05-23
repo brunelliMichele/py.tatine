@@ -1,0 +1,24 @@
+[
+  {
+    "filename": "data/test/query/4597118805213184.jpg",
+    "gallery_images": [
+      "data/test/gallery/n01855672_4393.jpg",
+      "data/test/gallery/painting_085_000045.jpg",
+      "data/test/gallery/n01855672_1037.jpg",
+      "data/test/gallery/n01855672_4197.jpg",
+      "data/test/gallery/painting_085_000084.jpg",
+      "data/test/gallery/painting_085_000118.jpg"
+    ]
+  },
+  {
+    "filename": "data/test/query/n01855672_10973.jpg",
+    "gallery_images": [
+      "data/test/gallery/n01855672_1037.jpg",
+      "data/test/gallery/n01855672_4393.jpg",
+      "data/test/gallery/n01855672_4197.jpg",
+      "data/test/gallery/painting_085_000045.jpg",
+      "data/test/gallery/painting_085_000084.jpg",
+      "data/test/gallery/painting_085_000118.jpg"
+    ]
+  }
+]
