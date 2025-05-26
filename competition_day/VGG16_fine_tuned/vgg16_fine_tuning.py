@@ -9,6 +9,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 # Percorso dei dati
 train_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'training')
 
+print(f"📁 Verifica cartella di training: {train_dir}")
 # Parametri
 img_size = (224, 224)
 batch_size = 32
@@ -22,6 +23,7 @@ if not subdirs:
 
 num_classes = len(subdirs)
 
+print("🧪 Preparo generatori di immagini con data augmentation...")
 # Data augmentation e preprocessing
 train_datagen = ImageDataGenerator(
     rescale=1./255,
@@ -47,6 +49,7 @@ val_generator = train_datagen.flow_from_directory(
     subset='validation'
 )
 
+print("📥 Caricamento modello VGG16 base (senza top)...")
 # Carica VGG16 senza top
 base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 x = Flatten()(base_model.output)
@@ -55,17 +58,22 @@ x = Dropout(0.5)(x)
 output = Dense(num_classes, activation='softmax')(x)
 
 model = Model(inputs=base_model.input, outputs=output)
+print("🔧 Modello VGG16 modificato con classifier custom.")
 
+print("❄️ Congelo i layer convoluzionali di VGG16...")
 # Congela i layer convoluzionali
 for layer in base_model.layers:
     layer.trainable = False
 
+print("⚙️ Compilo il modello...")
 # Compila il modello
 model.compile(optimizer=Adam(learning_rate=1e-4), loss='categorical_crossentropy', metrics=['accuracy'])
 
+print(f"💾 Il modello migliore sarà salvato in: vgg16_finetuned_from_script.h5")
 # Salvataggio del modello
 checkpoint = ModelCheckpoint('vgg16_finetuned_from_script.h5', save_best_only=True, monitor='val_accuracy', mode='max')
 
+print("🚀 Inizio fase di allenamento...")
 # Allenamento
 model.fit(
     train_generator,
@@ -73,3 +81,4 @@ model.fit(
     validation_data=val_generator,
     callbacks=[checkpoint]
 )
+print("✅ Allenamento completato!")
