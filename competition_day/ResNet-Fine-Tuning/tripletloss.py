@@ -72,7 +72,7 @@ class DirectTripletDataset(Dataset):
         anchor_img, _ = self.dataset[anchor_idx]
         pos_img, _ = self.dataset[pos_idx]
         neg_img, _ = self.dataset[neg_idx]
-        return (anchor_img, pos_img, neg_img), None
+        return (anchor_img, pos_img, neg_img)
 
 
 # Embedding network
@@ -128,7 +128,7 @@ transform = transforms.Compose([
 # Create datasets - modify the paths to point to your actual data directories
 try:
     print("Loading training dataset...")
-    train_dataset = torchvision.datasets.ImageFolder(root="../data/training", transform=transform)
+    train_dataset = torchvision.datasets.ImageFolder(root="competition_day/data/training", transform=transform)
     print(f"Found {len(train_dataset)} training images")
     
     # Create triplet dataset
@@ -141,8 +141,8 @@ try:
     
     print("Loading gallery and query datasets...")
     # Check if directories exist - use training as fallback if not
-    gallery_dir = "../data/test/gallery" if os.path.exists("../data/test/gallery") else "data/training"
-    query_dir = "../data/test/query" if os.path.exists("../data/test/query") else "data/training"
+    gallery_dir = "competition_day/data/test/gallery" if os.path.exists("competition_day/data/test/gallery") else "data/training"
+    query_dir = "competition_day/data/test/query" if os.path.exists("competition_day/data/test/query") else "data/training"
     
     gallery_dataset = ImageSimilarityDataset(image_dir=gallery_dir, transform=transform)
     query_dataset = ImageSimilarityDataset(image_dir=query_dir, transform=transform)
@@ -187,7 +187,7 @@ for epoch in range(num_epochs):
     train_loss = 0.0
     batch_count = 0
     
-    for (anchor_img, pos_img, neg_img), _ in triplet_train_loader:
+    for anchor_img, pos_img, neg_img in triplet_train_loader:
         batch_count += 1
         anchor_img = anchor_img.to(device)
         pos_img = pos_img.to(device)
