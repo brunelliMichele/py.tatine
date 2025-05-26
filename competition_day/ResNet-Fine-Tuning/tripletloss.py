@@ -156,6 +156,10 @@ except Exception as e:
     print(f"Error loading datasets: {e}")
     raise
 
+print(train_dataset.classes)
+print(train_dataset.targets[:20])
+
+
 # Create model
 print("Creating model...")
 base_model = resnet50(pretrained=True)
