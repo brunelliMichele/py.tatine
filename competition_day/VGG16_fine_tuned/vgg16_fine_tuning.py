@@ -1,0 +1,68 @@
+import os
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, Flatten, Dropout
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.callbacks import ModelCheckpoint
+
+# Percorso dei dati
+train_dir = '../data/train'
+
+# Parametri
+img_size = (224, 224)
+batch_size = 32
+num_epochs = 10
+num_classes = len(next(os.walk(train_dir))[1])
+
+# Data augmentation e preprocessing
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    rotation_range=20,
+    horizontal_flip=True,
+    zoom_range=0.2,
+    validation_split=0.2
+) 
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=img_size,
+    batch_size=batch_size,
+    class_mode='categorical',
+    subset='training'
+)
+
+val_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=img_size,
+    batch_size=batch_size,
+    class_mode='categorical',
+    subset='validation'
+)
+
+# Carica VGG16 senza top
+base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+x = Flatten()(base_model.output)
+x = Dense(256, activation='relu')(x)
+x = Dropout(0.5)(x)
+output = Dense(num_classes, activation='softmax')(x)
+
+model = Model(inputs=base_model.input, outputs=output)
+
+# Congela i layer convoluzionali
+for layer in base_model.layers:
+    layer.trainable = False
+
+# Compila il modello
+model.compile(optimizer=Adam(learning_rate=1e-4), loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Salvataggio del modello
+checkpoint = ModelCheckpoint('vgg16_finetuned_from_script.h5', save_best_only=True, monitor='val_accuracy', mode='max')
+
+# Allenamento
+model.fit(
+    train_generator,
+    epochs=num_epochs,
+    validation_data=val_generator,
+    callbacks=[checkpoint]
+)
