@@ -12,7 +12,7 @@ import torchvision.transforms as T
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
-GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "training")
+GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
 OUTPUT_FILE = os.path.join(BASE_DIR, "retrieval_output.json")
 TOP_K = 3
 MODEL_PATH = os.path.join(BASE_DIR, "..", "resnet50_finetuned.pth")
