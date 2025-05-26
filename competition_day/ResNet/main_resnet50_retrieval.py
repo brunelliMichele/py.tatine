@@ -136,7 +136,10 @@ topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
 
 results = []
 for i, query_fname in enumerate(query_filenames):
-    top_gallery_files = [f"{gallery_filenames[idx][0]}/{gallery_filenames[idx][1]}" for idx in topk_indices[i]]
+    if isinstance(gallery_filenames[0], tuple):
+        top_gallery_files = [f"{gallery_filenames[idx][0]}/{gallery_filenames[idx][1]}" for idx in topk_indices[i]]
+    else:
+        top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]    
     results.append({
         "filename": query_fname,
         "samples": top_gallery_files
