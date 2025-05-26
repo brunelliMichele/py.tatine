@@ -7,13 +7,20 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import ModelCheckpoint
 
 # Percorso dei dati
-train_dir = '../data/training'
+train_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'training')
 
 # Parametri
 img_size = (224, 224)
 batch_size = 32
 num_epochs = 10
-num_classes = len(next(os.walk(train_dir))[1])
+if not os.path.exists(train_dir):
+    raise FileNotFoundError(f"La cartella '{train_dir}' non esiste.")
+
+subdirs = [d for d in os.listdir(train_dir) if os.path.isdir(os.path.join(train_dir, d))]
+if not subdirs:
+    raise RuntimeError(f"La cartella '{train_dir}' non contiene sottocartelle di classi.")
+
+num_classes = len(subdirs)
 
 # Data augmentation e preprocessing
 train_datagen = ImageDataGenerator(
