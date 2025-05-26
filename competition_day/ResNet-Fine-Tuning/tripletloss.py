@@ -17,11 +17,9 @@ import random
 class ImageSimilarityDataset(Dataset):
     def __init__(self, image_dir, transform=None):
         self.image_paths = [os.path.join(image_dir, img) for img in os.listdir(image_dir) 
-                           if img.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp'))]
+                            if img.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp'))]
         self.transform = transform
-        # For simplicity, we'll use image indices as pseudo-labels
-        # In a real scenario, you'd use actual class labels if available
-        self.labels = list(range(len(self.image_paths)))
+        self.labels = [-1 for _ in self.image_paths]  # Placeholder, no true labels
         
     def __len__(self):
         return len(self.image_paths)
@@ -29,7 +27,7 @@ class ImageSimilarityDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self.image_paths[idx]
         image = Image.open(img_path).convert('RGB')
-        label = self.labels[idx]
+        label = self.labels[idx]  # Always -1 for gallery/query
         
         if self.transform:
             image = self.transform(image)
