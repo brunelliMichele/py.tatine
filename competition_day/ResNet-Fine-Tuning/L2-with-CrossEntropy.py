@@ -16,9 +16,9 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 # Configurazione base
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-TRAIN_DIR = './data/training'
-QUERY_DIR = './data/test/query'
-GALLERY_DIR = './data/test/gallery'
+TRAIN_DIR = 'competition_day/data/training'
+QUERY_DIR = 'competition_day/data/test/query'
+GALLERY_DIR = 'competition_day/data/test/gallery'
 OUTPUT_JSON = 'retrieval_results.json'
 BATCH_SIZE = 32
 EMBEDDING_SIZE = 512
