@@ -71,7 +71,7 @@ model.compile(optimizer=Adam(learning_rate=1e-4), loss='categorical_crossentropy
 
 print(f"💾 Il modello migliore sarà salvato in: vgg16_finetuned_from_script.h5")
 # Salvataggio del modello
-checkpoint = ModelCheckpoint('vgg16_finetuned_from_script.h5', save_best_only=True, monitor='val_accuracy', mode='max')
+checkpoint = ModelCheckpoint('vgg16_finetuned_from_script.keras', save_best_only=True, monitor='val_accuracy', mode='max')
 
 print("🚀 Inizio fase di allenamento...")
 # Allenamento
