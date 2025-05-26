@@ -34,6 +34,7 @@ transform = T.Compose([
 # Caricamento modello ResNet50
 print("🔍 Caricamento modello ResNet50...")
 device = "cuda" if torch.cuda.is_available() else "cpu"
+torch.cuda.empty_cache()
 model = models.resnet50(pretrained=True)
 model.fc = torch.nn.Identity()  # Rimuove il classificatore
 model.eval().to(device)
@@ -68,10 +69,19 @@ def load_images(folder, use_subfolders=False):
     return torch.stack(images).to(device), filenames
 
 
-def extract_features(model, images):
+def extract_features(model, images, batch_size=16):
+    model.eval()
+    features_list = []
+
     with torch.no_grad():
-        features = model(images)
-        return features / features.norm(dim=-1, keepdim=True)
+        for i in range(0, len(images), batch_size):
+            batch = images[i:i+batch_size]
+            batch = batch.to(device)
+            feats = model(batch)
+            feats = feats / feats.norm(dim=-1, keepdim=True)
+            features_list.append(feats.cpu())
+
+    return torch.cat(features_list)
 
 
 def show_retrieval_results(query_dir, gallery_dir, results):
@@ -113,14 +123,14 @@ gallery_images, gallery_filenames = load_images(GALLERY_DIR, use_subfolders=True
 print(f"✅ Gallery: {len(gallery_images)} immagini")
 
 print("📈 Estrazione feature gallery...")
-gallery_features = extract_features(model, gallery_images)
+gallery_features = extract_features(model, gallery_images, batch_size=16)
 
 print("📥 Caricamento immagini query...")
 query_images, query_filenames = load_images(QUERY_DIR, use_subfolders=False)
 print(f"✅ Query: {len(query_images)} immagini")
 
 print("🔎 Retrieval...")
-query_features = extract_features(model, query_images)
+query_features = extract_features(model, query_images, batch_size=16)
 similarity = query_features @ gallery_features.T
 topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
 
