@@ -119,7 +119,7 @@ def show_retrieval_results(query_dir, gallery_dir, results):
 
 
 print("📥 Caricamento immagini gallery...")
-gallery_images, gallery_filenames = load_images(GALLERY_DIR, use_subfolders=True)
+gallery_images, gallery_filenames = load_images(GALLERY_DIR, use_subfolders=False)
 print(f"✅ Gallery: {len(gallery_images)} immagini")
 
 print("📈 Estrazione feature gallery...")
