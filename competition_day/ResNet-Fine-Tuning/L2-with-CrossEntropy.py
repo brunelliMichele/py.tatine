@@ -10,6 +10,9 @@ from tqdm import tqdm
 import faiss
 import numpy as np
 from PIL import Image
+from torchvision.models import resnet18, ResNet18_Weights
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 # Configurazione base
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -33,7 +36,7 @@ train_dataset = ImageFolder(TRAIN_DIR, transform=transform)
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # Modello base
-model = models.resnet18(pretrained=True)
+model = resnet18(weights=ResNet18_Weights.DEFAULT)
 model.fc = nn.Linear(model.fc.in_features, EMBEDDING_SIZE)
 model = model.to(DEVICE)
 
