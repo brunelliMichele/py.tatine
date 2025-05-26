@@ -38,14 +38,13 @@ class ImageSimilarityDataset(Dataset):
 
 # Direct triplet dataset - more efficient for training
 class DirectTripletDataset(Dataset):
-    def __init__(self, dataset, transform=None):
+    def __init__(self, dataset):
         self.dataset = dataset
-        self.transform = transform
-        self.labels = [label for _, label in dataset]
-        
+        self.labels = dataset.targets  # ✅ Usa le vere label
         self.triplets = []
         num_samples = len(dataset)
 
+        # Crea una mappa da label a lista di indici
         label_to_indices = {}
         for idx, label in enumerate(self.labels):
             label_to_indices.setdefault(label, []).append(idx)
@@ -55,17 +54,16 @@ class DirectTripletDataset(Dataset):
         for idx in range(num_samples):
             anchor_label = self.labels[idx]
             positive_indices = label_to_indices[anchor_label].copy()
-            positive_indices.remove(idx)
+            positive_indices.remove(idx) if idx in positive_indices else None
             negative_labels = [l for l in all_labels if l != anchor_label]
-            negative_label = random.choice(negative_labels)
-            negative_indices = label_to_indices[negative_label]
 
-            if not positive_indices or not negative_indices:
+            if not positive_indices or not negative_labels:
                 continue
-            
-            for _ in range(3):
+
+            for _ in range(3):  # genera 3 tripletti per ciascun anchor
                 pos_idx = random.choice(positive_indices)
-                neg_idx = random.choice(negative_indices)
+                neg_label = random.choice(negative_labels)
+                neg_idx = random.choice(label_to_indices[neg_label])
                 self.triplets.append((idx, pos_idx, neg_idx))
 
     def __len__(self):
@@ -73,10 +71,11 @@ class DirectTripletDataset(Dataset):
     
     def __getitem__(self, idx):
         anchor_idx, pos_idx, neg_idx = self.triplets[idx]
-        anchor_img, anchor_label = self.dataset[anchor_idx]
-        pos_img, pos_label = self.dataset[pos_idx]
-        neg_img, neg_label = self.dataset[neg_idx]
-        return (anchor_img, pos_img, neg_img), (anchor_label, pos_label, neg_label)
+        anchor_img, _ = self.dataset[anchor_idx]
+        pos_img, _ = self.dataset[pos_idx]
+        neg_img, _ = self.dataset[neg_idx]
+        return (anchor_img, pos_img, neg_img), None
+
 
 # Embedding network
 class EmbeddingNet(nn.Module):
@@ -131,7 +130,7 @@ transform = transforms.Compose([
 # Create datasets - modify the paths to point to your actual data directories
 try:
     print("Loading training dataset...")
-    train_dataset = torchvision.datasets.ImageFolder(root="data/training", transform=transform)
+    train_dataset = torchvision.datasets.ImageFolder(root="../data/training", transform=transform)
     print(f"Found {len(train_dataset)} training images")
     
     # Create triplet dataset
@@ -144,8 +143,8 @@ try:
     
     print("Loading gallery and query datasets...")
     # Check if directories exist - use training as fallback if not
-    gallery_dir = "data/test/gallery" if os.path.exists("data/test/gallery") else "data/training"
-    query_dir = "data/test/query" if os.path.exists("data/test/query") else "data/training"
+    gallery_dir = "../data/test/gallery" if os.path.exists("../data/test/gallery") else "data/training"
+    query_dir = "../data/test/query" if os.path.exists("../data/test/query") else "data/training"
     
     gallery_dataset = ImageSimilarityDataset(image_dir=gallery_dir, transform=transform)
     query_dataset = ImageSimilarityDataset(image_dir=query_dir, transform=transform)
