@@ -7,7 +7,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import ModelCheckpoint
 
 # Percorso dei dati
-train_dir = '../data/train'
+train_dir = '../data/training'
 
 # Parametri
 img_size = (224, 224)
