@@ -15,4 +15,4 @@ requests
 tensorflow>=2.9
 opencv-python
 annoy
-sicikit-learn
+scikit-learn
