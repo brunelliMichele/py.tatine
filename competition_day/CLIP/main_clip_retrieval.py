@@ -45,7 +45,7 @@ def load_images_from_folder(folder):
                 filenames.append(fname)
             except Exception as e:
                 print(f"Errore con {fname}: {e}")
-    return torch.stack(images).to(device), filenames
+    return images, filenames
 
 def show_retrieval_results(query_dir, gallery_dir, results):
     for query_fname, gallery_list in results.items():
