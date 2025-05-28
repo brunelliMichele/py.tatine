@@ -114,10 +114,14 @@ print("🧪 Preparazione dataloader per training...")
 train_dataset = SimpleImageDataset(TRAIN_DIR, preprocess)
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True)
 
+# Add a linear classification head for fine-tuning
+projection_head = torch.nn.Linear(model.visual.output_dim, len(train_dataset.label_map)).to(device)
+
 # 🚀 Inizio fine-tuning CLIP con classificazione supervisionata...
 print("🚀 Inizio fine-tuning CLIP con classificazione supervisionata...")
 model.train()
-optimizer = torch.optim.AdamW(model.parameters(), lr=1e-5)
+params = list(model.parameters()) + list(projection_head.parameters())
+optimizer = torch.optim.AdamW(params, lr=1e-5)
 criterion = torch.nn.CrossEntropyLoss()
 
 for epoch in range(1):  # Cambia il numero di epoche se serve
@@ -126,10 +130,8 @@ for epoch in range(1):  # Cambia il numero di epoche se serve
         images, labels = images.to(device), labels.to(device)
         optimizer.zero_grad()
         features = model.encode_image(images).float()
-        features = features / features.norm(dim=-1, keepdim=True)
-        logits = features @ features.T
-        targets = torch.arange(len(images), device=device)
-        loss = criterion(logits, targets)
+        logits = projection_head(features)
+        loss = criterion(logits, labels)
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
