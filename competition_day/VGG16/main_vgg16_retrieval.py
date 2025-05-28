@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import torch
 from PIL import Image
@@ -11,7 +16,7 @@ from tensorflow.keras.models import load_model
 
 # Controlla se esiste il modello fine-tuned
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FINETUNED_MODEL_PATH = os.path.join(BASE_DIR, "vgg16_finetuned_from_script.h5")
+FINETUNED_MODEL_PATH = os.path.join(BASE_DIR, "..", "vgg16_finetuned_from_script.keras")
 if not os.path.exists(FINETUNED_MODEL_PATH):
     print("⚠️  Modello fine-tuned non trovato, lo creo ora...")
     import subprocess
@@ -22,7 +27,7 @@ if not os.path.exists(FINETUNED_MODEL_PATH):
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
 OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
-TOP_K = 3
+TOP_K = 10
 
 # Trasformazioni
 transform = T.Compose([
@@ -75,19 +80,18 @@ query_features = extract_features(model, query_images)
 similarity = query_features @ gallery_features.T
 topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
 
-results = []
+results = {}
 for i, query_fname in enumerate(query_filenames):
     top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
-    results.append({
-        "filename": query_fname,
-        "samples": top_gallery_files
-    })
+    results[query_fname] = top_gallery_files
 
 print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
     json.dump(results, f, indent=2)
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
+
+submit(results, "Py.tatine")
 
 # --- Visualizzazione risultati ---
 def show_retrieval_results(query_dir, gallery_dir, results):
@@ -108,4 +112,4 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.tight_layout()
         plt.show()
 
-show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)

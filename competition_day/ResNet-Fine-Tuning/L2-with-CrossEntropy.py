@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import torch
 import torchvision.transforms as transforms
@@ -16,9 +21,9 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 # Configurazione base
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-TRAIN_DIR = './data/training'
-QUERY_DIR = './data/test/query'
-GALLERY_DIR = './data/test/gallery'
+TRAIN_DIR = 'competition_day/data/training'
+QUERY_DIR = 'competition_day/data/test/query'
+GALLERY_DIR = 'competition_day/data/test/gallery'
 OUTPUT_JSON = 'retrieval_results.json'
 BATCH_SIZE = 32
 EMBEDDING_SIZE = 512
@@ -86,17 +91,17 @@ def retrieve():
     index.add(gallery_feats)
     D, I = index.search(query_feats, TOP_K)
 
-    results = []
+    results = {}
     for idx, query_path in enumerate(query_paths):
-        result = {
-            "filename": query_path,
-            "gallery_images": [gallery_paths[i] for i in I[idx]]
-        }
-        results.append(result)
+        query_fname = os.path.basename(query_path)
+        gallery_fnames = [os.path.basename(gallery_paths[i]) for i in I[idx]]
+        results[query_fname] = gallery_fnames
 
     with open(OUTPUT_JSON, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"Results saved to {OUTPUT_JSON}")
+
+    submit(results, "Py.tatine")
 
 if __name__ == '__main__':
     train()

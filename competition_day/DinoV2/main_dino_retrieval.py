@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import torch
 from PIL import Image
@@ -9,11 +14,10 @@ import timm
 import torchvision.transforms as T
 
 # Percorsi
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
 OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
-TOP_K = 3
+TOP_K = 10
 
 # Trasformazioni
 transform = T.Compose([
@@ -60,7 +64,7 @@ print("📥 Caricamento immagini query...")
 query_images, query_filenames = load_images_from_folder(QUERY_DIR)
 print(f"✅ Query: {len(query_images)} immagini")
 
-results = []
+results = {}
 print("🔎 Retrieval...")
 with torch.no_grad():
     query_features = extract_cls(model, query_images)
@@ -71,22 +75,21 @@ with torch.no_grad():
 
     for i, query_fname in enumerate(query_filenames):
         top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
-        results.append({
-            "filename": query_fname,
-            "samples": top_gallery_files
-        })
+        results[query_fname] = top_gallery_files
 
 print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
     json.dump(results, f, indent=2)
 
+submit(results, "Py.tatine")
+
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
 # --- Visualizzazione risultati ---
 def show_retrieval_results(query_dir, gallery_dir, results):
-    for item in results:
-        query_img = Image.open(os.path.join(query_dir, item['filename'])).convert("RGB")
-        gallery_imgs = [Image.open(os.path.join(gallery_dir, fname)).convert("RGB") for fname in item['samples']]
+    for query_fname, gallery_list in results.items():
+        query_img = Image.open(os.path.join(query_dir, query_fname)).convert("RGB")
+        gallery_imgs = [Image.open(os.path.join(gallery_dir, fname)).convert("RGB") for fname in gallery_list]
 
         fig, axes = plt.subplots(1, len(gallery_imgs) + 1, figsize=(15, 5))
         axes[0].imshow(query_img)
@@ -101,4 +104,4 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.tight_layout()
         plt.show()
 
-show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)

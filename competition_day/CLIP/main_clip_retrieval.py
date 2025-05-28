@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+
 import json
 import torch
 import clip
@@ -7,16 +12,18 @@ from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize
+from submit import submit
 
 # Paths
-# In alto, sotto import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Modifica i path così:
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
+print(f"Resolved QUERY_DIR: {QUERY_DIR}")
+print(f"Resolved GALLERY_DIR: {GALLERY_DIR}")
+if not os.path.exists(GALLERY_DIR):
+    raise FileNotFoundError(f"❌ Directory not found: {GALLERY_DIR}")
 OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
-TOP_K = 3
+TOP_K = 10
 
 # Load CLIP model
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -24,6 +31,9 @@ model, preprocess = clip.load("ViT-B/32", device=device)
 
 
 def load_images_from_folder(folder):
+    print(f"🔍 Trying to load images from: {folder}")
+    if not os.path.exists(folder):
+        raise FileNotFoundError(f"❌ Directory not found: {folder}")
     images = []
     filenames = []
     for fname in sorted(os.listdir(folder)):
@@ -38,20 +48,20 @@ def load_images_from_folder(folder):
     return torch.stack(images).to(device), filenames
 
 def show_retrieval_results(query_dir, gallery_dir, results):
-    for item in results:
-        query_img = Image.open(os.path.join(query_dir, item["filename"])).convert("RGB")
-        gallery_imgs = [Image.open(os.path.join(gallery_dir, fname)).convert("RGB") for fname in item["samples"]]
+    for query_fname, gallery_list in results.items():
+        query_img = Image.open(os.path.join(query_dir, query_fname)).convert("RGB")
+        gallery_imgs = [Image.open(os.path.join(gallery_dir, fname)).convert("RGB") for fname in gallery_list]
 
-        fig, axes = plt.subplots(1, len(gallery_imgs) + 1, figsize=(15,5))
+        fig, axes = plt.subplots(1, len(gallery_imgs) + 1, figsize=(15, 5))
         axes[0].imshow(query_img)
         axes[0].set_title("Query")
-        axes[0].axis("off")
+        axes[0].axis('off')
 
         for i, img in enumerate(gallery_imgs):
             axes[i + 1].imshow(img)
             axes[i + 1].set_title(f"Top {i+1}")
-            axes[i + 1].axis("off")
-        
+            axes[i + 1].axis('off')
+
         plt.tight_layout()
         plt.show()
 
@@ -70,7 +80,7 @@ query_images, query_filenames = load_images_from_folder(QUERY_DIR)
 print(f"✅ {len(query_images)} immagini query caricate")
 
 print("🔄 Estrazione feature query e retrieval...")
-results = []
+results = {}
 
 with torch.no_grad():
     query_features = model.encode_image(query_images).float()
@@ -81,10 +91,7 @@ with torch.no_grad():
 
     for i, query_fname in enumerate(query_filenames):
         top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
-        results.append({
-            "filename": query_fname,
-            "samples": top_gallery_files
-        })
+        results[query_fname] = top_gallery_files
 
 print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
@@ -92,5 +99,7 @@ with open(OUTPUT_FILE, 'w') as f:
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
+submit(results, "Py.tatine")
+
 # chiama la funzione per visualizzare le immagini
-show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)

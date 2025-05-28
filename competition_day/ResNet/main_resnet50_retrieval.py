@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import subprocess
 import json
 import torch
@@ -12,9 +17,9 @@ import torchvision.transforms as T
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
-GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "training")
+GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
 OUTPUT_FILE = os.path.join(BASE_DIR, "retrieval_output.json")
-TOP_K = 3
+TOP_K = 10
 MODEL_PATH = os.path.join(BASE_DIR, "..", "resnet50_finetuned.pth")
 TRAINING_SCRIPT = os.path.join(BASE_DIR, "..", "ResNet-Fine-Tuning", "resNet_fine_tuning.py")
 
@@ -34,6 +39,7 @@ transform = T.Compose([
 # Caricamento modello ResNet50
 print("🔍 Caricamento modello ResNet50...")
 device = "cuda" if torch.cuda.is_available() else "cpu"
+torch.cuda.empty_cache()
 model = models.resnet50(pretrained=True)
 model.fc = torch.nn.Identity()  # Rimuove il classificatore
 model.eval().to(device)
@@ -68,10 +74,19 @@ def load_images(folder, use_subfolders=False):
     return torch.stack(images).to(device), filenames
 
 
-def extract_features(model, images):
+def extract_features(model, images, batch_size=16):
+    model.eval()
+    features_list = []
+
     with torch.no_grad():
-        features = model(images)
-        return features / features.norm(dim=-1, keepdim=True)
+        for i in range(0, len(images), batch_size):
+            batch = images[i:i+batch_size]
+            batch = batch.to(device)
+            feats = model(batch)
+            feats = feats / feats.norm(dim=-1, keepdim=True)
+            features_list.append(feats.cpu())
+
+    return torch.cat(features_list)
 
 
 def show_retrieval_results(query_dir, gallery_dir, results):
@@ -109,34 +124,36 @@ def show_retrieval_results(query_dir, gallery_dir, results):
 
 
 print("📥 Caricamento immagini gallery...")
-gallery_images, gallery_filenames = load_images(GALLERY_DIR, use_subfolders=True)
+gallery_images, gallery_filenames = load_images(GALLERY_DIR, use_subfolders=False)
 print(f"✅ Gallery: {len(gallery_images)} immagini")
 
 print("📈 Estrazione feature gallery...")
-gallery_features = extract_features(model, gallery_images)
+gallery_features = extract_features(model, gallery_images, batch_size=16)
 
 print("📥 Caricamento immagini query...")
 query_images, query_filenames = load_images(QUERY_DIR, use_subfolders=False)
 print(f"✅ Query: {len(query_images)} immagini")
 
 print("🔎 Retrieval...")
-query_features = extract_features(model, query_images)
+query_features = extract_features(model, query_images, batch_size=16)
 similarity = query_features @ gallery_features.T
 topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
 
-results = []
+results = {}
 for i, query_fname in enumerate(query_filenames):
-    top_gallery_files = [f"{gallery_filenames[idx][0]}/{gallery_filenames[idx][1]}" for idx in topk_indices[i]]
-    results.append({
-        "filename": query_fname,
-        "samples": top_gallery_files
-    })
+    if isinstance(gallery_filenames[0], tuple):
+        top_gallery_files = [f"{gallery_filenames[idx][0]}/{gallery_filenames[idx][1]}" for idx in topk_indices[i]]
+    else:
+        top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]    
+    results[query_fname] = top_gallery_files
 
 print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
     json.dump(results, f, indent=2)
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
+submit(results, "Py.tatine")
+
 
 # Mostra risultati
-show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
