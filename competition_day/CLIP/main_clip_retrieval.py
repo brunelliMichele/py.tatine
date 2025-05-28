@@ -18,7 +18,7 @@ from submit import submit
 
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
-TRAIN_DIR = os.path.join(BASE_DIR, "..", "data", "train")
+TRAIN_DIR = os.path.join(BASE_DIR, "..", "data", "training")
 print(f"Resolved QUERY_DIR: {QUERY_DIR}")
 print(f"Resolved GALLERY_DIR: {GALLERY_DIR}")
 print(f"Resolved TRAIN_DIR: {TRAIN_DIR}")
