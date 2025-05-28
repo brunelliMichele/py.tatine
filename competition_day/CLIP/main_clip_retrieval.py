@@ -66,14 +66,24 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.show()
 
 
+def extract_clip_features(model, images, batch_size=16):
+    model.eval()
+    all_features = []
+    with torch.no_grad():
+        for i in range(0, len(images), batch_size):
+            batch = images[i:i+batch_size]
+            batch = torch.stack(batch).to(device)
+            feats = model.encode_image(batch).float()
+            feats = feats / feats.norm(dim=-1, keepdim=True)
+            all_features.append(feats.cpu())
+    return torch.cat(all_features).to(device)
+
 print("🔄 Caricamento immagini gallery...")
 gallery_images, gallery_filenames = load_images_from_folder(GALLERY_DIR)
 print(f"✅ {len(gallery_images)} immagini caricate nella gallery")
 
 print("🔄 Estrazione feature gallery...")
-with torch.no_grad():
-    gallery_features = model.encode_image(gallery_images).float()
-    gallery_features /= gallery_features.norm(dim=-1, keepdim=True)
+gallery_features = extract_clip_features(model, gallery_images)
 
 print("🔄 Caricamento immagini query...")
 query_images, query_filenames = load_images_from_folder(QUERY_DIR)
