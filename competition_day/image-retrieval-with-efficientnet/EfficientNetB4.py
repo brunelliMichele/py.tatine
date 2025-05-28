@@ -95,7 +95,7 @@ for i, query_path in enumerate(query_images):
     cv2.waitKey(2000)
     
 
-results = []
+results = {}
 
 for i, query_path in enumerate(query_images):
     print(f"\nProcessing query {i+1}/{len(query_images)}: {os.path.basename(query_path)}")
@@ -103,12 +103,9 @@ for i, query_path in enumerate(query_images):
     similar_idxs = annoy_index.get_nns_by_vector(query_feature, top_n)
     similar_paths = [gallery_images[idx] for idx in similar_idxs]
 
-    # Prepare result entry
-    result = {
-        "filename": query_path.replace("\\", "/"),  # normalize path for JSON
-        "gallery_images": [p.replace("\\", "/") for p in similar_paths]
-    }
-    results.append(result)
+    query_fname = os.path.basename(query_path).replace("\\", "/")
+    gallery_fnames = [os.path.basename(p).replace("\\", "/") for p in similar_paths]
+    results[query_fname] = gallery_fnames
 
     # Show images strip
     strip_img = create_image_strip(query_path, similar_paths)

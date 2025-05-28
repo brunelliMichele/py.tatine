@@ -70,7 +70,7 @@ query_images, query_filenames = load_images_from_folder(QUERY_DIR)
 print(f"✅ {len(query_images)} immagini query caricate")
 
 print("🔄 Estrazione feature query e retrieval...")
-results = []
+results = {}
 
 with torch.no_grad():
     query_features = model.encode_image(query_images).float()
@@ -81,10 +81,7 @@ with torch.no_grad():
 
     for i, query_fname in enumerate(query_filenames):
         top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
-        results.append({
-            "filename": query_fname,
-            "samples": top_gallery_files
-        })
+        results[query_fname] = top_gallery_files
 
 print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:

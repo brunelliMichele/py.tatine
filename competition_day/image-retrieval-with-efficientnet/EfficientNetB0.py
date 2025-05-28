@@ -47,7 +47,7 @@ for i, vec in enumerate(gallery_features):
 annoy_index.build(n_trees=10)
 
 # --- Process query images and prepare results ---
-results = []
+results = {}
 
 for root, _, files in os.walk(query_dir):
     for filename in files:
@@ -57,11 +57,10 @@ for root, _, files in os.walk(query_dir):
 
             similar_indices = annoy_index.get_nns_by_vector(query_features, top_n)
 
-            result = {
-                "filename": query_path.replace("\\", "/"),  # Normalize for JSON
-                "gallery_images": [gallery_filenames[idx].replace("\\", "/") for idx in similar_indices]
-            }
-            results.append(result)
+            query_fname = os.path.basename(query_path).replace("\\", "/")
+            gallery_fnames = [os.path.basename(gallery_filenames[idx]).replace("\\", "/") for idx in similar_indices]
+
+            results[query_fname] = gallery_fnames
 
 # --- Write to JSON file in the same folder as the script ---
 script_dir = os.path.dirname(os.path.abspath(__file__))

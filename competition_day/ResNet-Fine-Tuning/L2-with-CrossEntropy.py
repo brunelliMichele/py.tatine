@@ -83,13 +83,11 @@ def retrieve():
     index.add(gallery_feats)
     D, I = index.search(query_feats, TOP_K)
 
-    results = []
+    results = {}
     for idx, query_path in enumerate(query_paths):
-        result = {
-            "filename": query_path,
-            "gallery_images": [gallery_paths[i] for i in I[idx]]
-        }
-        results.append(result)
+        query_fname = os.path.basename(query_path)
+        gallery_fnames = [os.path.basename(gallery_paths[i]) for i in I[idx]]
+        results[query_fname] = gallery_fnames
 
     with open(OUTPUT_JSON, 'w') as f:
         json.dump(results, f, indent=2)

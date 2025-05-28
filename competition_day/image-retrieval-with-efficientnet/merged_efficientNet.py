@@ -71,7 +71,7 @@ query_images = [
     for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))
 ]
 
-results = []
+results = {}
 
 for i, query_path in enumerate(query_images):
     print(f"\nProcessing query {i+1}/{len(query_images)}: {os.path.basename(query_path)}")
@@ -85,10 +85,9 @@ for i, query_path in enumerate(query_images):
     cv2.waitKey(2000)
 
     # Save result
-    results.append({
-        "filename": query_path.replace("\\", "/"),
-        "gallery_images": [p.replace("\\", "/") for p in similar_paths]
-    })
+    query_fname = os.path.basename(query_path).replace("\\", "/")
+    gallery_fnames = [os.path.basename(p).replace("\\", "/") for p in similar_paths]
+    results[query_fname] = gallery_fnames
 
 cv2.destroyAllWindows()
 
