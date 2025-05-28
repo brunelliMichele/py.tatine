@@ -29,8 +29,15 @@ def extract_features(image_path):
     return features.flatten()
 
 # --- Paths ---
-gallery_dir = "data/test/gallery"
-query_dir = "data/test/query"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+gallery_dir = os.path.abspath(os.path.join(script_dir, "..", "data", "test", "gallery"))
+print(f"📁 Looking for gallery images in: {gallery_dir}")
+query_dir = os.path.abspath(os.path.join(script_dir, "..", "data", "test", "query"))
+print(f"📁 Looking for query images in: {query_dir}")
+query_image_count = sum(1 for _, _, files in os.walk(query_dir) for f in files if f.lower().endswith(('.jpg', '.jpeg', '.png')))
+if query_image_count == 0:
+    raise ValueError(f"❌ No images found in query directory: {query_dir}")
+
 top_n = 10
 
 # --- Extract gallery features ---
@@ -43,6 +50,9 @@ for root, _, files in os.walk(gallery_dir):
             path = os.path.join(root, filename)
             gallery_filenames.append(path)
             gallery_features.append(extract_features(path))
+if not gallery_filenames:
+    raise ValueError(f"❌ No images found in gallery: {gallery_dir}")
+print(f"🔍 Found {len(gallery_filenames)} gallery images.")
 
 # --- Build Annoy index ---
 feature_dim = len(gallery_features[0])
@@ -75,6 +85,3 @@ with open(output_file, "w") as f:
 
 print(f"Retrieval complete. Results saved to '{output_file}'.")
 submit(results, "Py.tatine")
-
-
-
