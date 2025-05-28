@@ -27,7 +27,7 @@ TOP_K = 10
 
 # Load CLIP model
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load("ViT-B/32", device=device)
+model, preprocess = clip.load("RN50x64", device=device)
 
 
 def load_images_from_folder(folder):
