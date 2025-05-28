@@ -91,7 +91,7 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.show()
 
 
-def extract_clip_features(model, images, batch_size=16):
+def extract_clip_features(model, images, batch_size=4):
     model.eval()
     all_features = []
     with torch.no_grad():
@@ -112,7 +112,7 @@ gallery_features = extract_clip_features(model, gallery_images)
 
 print("🧪 Preparazione dataloader per training...")
 train_dataset = SimpleImageDataset(TRAIN_DIR, preprocess)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=4, shuffle=True)
 
 # Add a linear classification head for fine-tuning
 projection_head = torch.nn.Linear(model.visual.output_dim, len(train_dataset.label_map)).to(device)
