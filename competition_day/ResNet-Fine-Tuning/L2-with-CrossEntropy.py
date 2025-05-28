@@ -38,11 +38,14 @@ transform = transforms.Compose([
 
 # Caricamento dati training
 train_dataset = ImageFolder(TRAIN_DIR, transform=transform)
+print("Classi trovate:", train_dataset.class_to_idx)
+print("Numero classi:", len(train_dataset.classes))
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # Modello base
 model = resnet18(weights=ResNet18_Weights.DEFAULT)
-model.fc = nn.Linear(model.fc.in_features, EMBEDDING_SIZE)
+NUM_CLASSES = len(train_dataset.classes)
+model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
 model = model.to(DEVICE)
 
 # Ottimizzatore e loss
@@ -57,7 +60,14 @@ def train():
             inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
             optimizer.zero_grad()
             outputs = model(inputs)
+            print("Labels dtype:", labels.dtype)
+            print("Labels min:", labels.min().item(), "max:", labels.max().item())
+            print("Outputs shape:", outputs.shape)
             loss = criterion(outputs, labels)
+            print("Labels shape:", labels.shape)
+            print("Labels dtype:", labels.dtype)
+            print("Labels min/max:", labels.min().item(), labels.max().item())
+            print("Outputs shape:", outputs.shape)
             loss.backward()
             optimizer.step()
             epoch_loss += loss.item()
