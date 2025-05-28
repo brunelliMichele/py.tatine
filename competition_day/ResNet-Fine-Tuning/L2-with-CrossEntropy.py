@@ -75,20 +75,23 @@ def train():
     torch.save(model.state_dict(), 'best_model.pth')
 
 # Estrazione feature
+feature_model = resnet18(weights=ResNet18_Weights.DEFAULT)
+feature_model.fc = nn.Identity()
+feature_model.load_state_dict(torch.load('best_model.pth'), strict=False)
+feature_model = feature_model.to(DEVICE)
 def extract_features(directory):
-    model.eval()
+    feature_model.eval()
     features = []
     paths = []
     with torch.no_grad():
-        for img_name in tqdm(os.listdir(directory), desc=f"Extracting from {directory}"): #FORSE OS.WALK? 
+        for img_name in tqdm(os.listdir(directory), desc=f"Extracting from {directory}"):
             img_path = os.path.join(directory, img_name)
             image = Image.open(img_path).convert('RGB')
             tensor = transform(image).unsqueeze(0).to(DEVICE)
-            feat = model(tensor).cpu().numpy().flatten()
+            feat = feature_model(tensor).cpu().numpy().flatten()
             features.append(feat)
             paths.append(img_path)
     return np.array(features).astype('float32'), paths
-
 # Retrieval
 def retrieve():
     gallery_feats, gallery_paths = extract_features(GALLERY_DIR)
