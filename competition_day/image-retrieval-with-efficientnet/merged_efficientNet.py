@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import cv2
 import numpy as np
@@ -98,3 +103,4 @@ with open(output_file, "w") as f:
     json.dump(results, f, indent=2)
 
 print(f"\nRetrieval complete. Results saved to '{output_file}'.")
+submit(results, "Py.tatine")

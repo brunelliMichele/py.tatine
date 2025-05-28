@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import torch
 from PIL import Image
@@ -9,7 +14,6 @@ import timm
 import torchvision.transforms as T
 
 # Percorsi
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
 OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
@@ -77,6 +81,8 @@ print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
     json.dump(results, f, indent=2)
 
+submit(results, "Py.tatine")
+
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
 # --- Visualizzazione risultati ---
@@ -98,4 +104,4 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.tight_layout()
         plt.show()
 
-show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)

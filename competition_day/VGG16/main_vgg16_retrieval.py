@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import torch
 from PIL import Image
@@ -86,6 +91,8 @@ with open(OUTPUT_FILE, 'w') as f:
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
+submit(results, "Py.tatine")
+
 # --- Visualizzazione risultati ---
 def show_retrieval_results(query_dir, gallery_dir, results):
     for item in results:
@@ -105,4 +112,4 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.tight_layout()
         plt.show()
 
-show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
