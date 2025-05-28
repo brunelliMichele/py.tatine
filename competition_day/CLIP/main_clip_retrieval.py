@@ -18,8 +18,10 @@ from submit import submit
 
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
+TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "data", "training"))
 print(f"Resolved QUERY_DIR: {QUERY_DIR}")
 print(f"Resolved GALLERY_DIR: {GALLERY_DIR}")
+print(f"📁 Looking for training data in: {TRAIN_DIR}")
 if not os.path.exists(GALLERY_DIR):
     raise FileNotFoundError(f"❌ Directory not found: {GALLERY_DIR}")
 OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
@@ -92,16 +94,14 @@ print(f"✅ {len(query_images)} immagini query caricate")
 print("🔄 Estrazione feature query e retrieval...")
 results = {}
 
-with torch.no_grad():
-    query_features = model.encode_image(query_images).float()
-    query_features /= query_features.norm(dim=-1, keepdim=True)
+query_features = extract_clip_features(model, query_images)
 
-    similarity = query_features @ gallery_features.T  # (num_query, num_gallery)
-    topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
+similarity = query_features @ gallery_features.T  # (num_query, num_gallery)
+topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
 
-    for i, query_fname in enumerate(query_filenames):
-        top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
-        results[query_fname] = top_gallery_files
+for i, query_fname in enumerate(query_filenames):
+    top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
+    results[query_fname] = top_gallery_files
 
 print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
