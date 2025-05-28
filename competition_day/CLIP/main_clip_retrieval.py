@@ -16,7 +16,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
 OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
-TOP_K = 3
+TOP_K = 10
 
 # Load CLIP model
 device = "cuda" if torch.cuda.is_available() else "cpu"

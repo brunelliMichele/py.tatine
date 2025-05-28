@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
 OUTPUT_FILE = os.path.join(BASE_DIR, "retrieval_output.json")
-TOP_K = 3
+TOP_K = 10
 MODEL_PATH = os.path.join(BASE_DIR, "..", "resnet50_finetuned.pth")
 TRAINING_SCRIPT = os.path.join(BASE_DIR, "..", "ResNet-Fine-Tuning", "resNet_fine_tuning.py")
 

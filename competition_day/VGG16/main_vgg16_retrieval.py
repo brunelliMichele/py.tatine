@@ -22,7 +22,7 @@ if not os.path.exists(FINETUNED_MODEL_PATH):
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
 OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
-TOP_K = 3
+TOP_K = 10
 
 # Trasformazioni
 transform = T.Compose([
