@@ -44,12 +44,19 @@ model = torch.nn.Sequential(*list(models.vgg16().features)).eval().to(device)  #
 
 
 
-def extract_features(model, images):
+def extract_features(model, images, batch_size=16):
+    model.eval()
+    all_features = []
     with torch.no_grad():
-        features = model(images)
-        features = torch.nn.functional.adaptive_avg_pool2d(features, (1, 1))
-        features = features.view(features.size(0), -1)
-        return features / features.norm(dim=-1, keepdim=True)
+        for i in range(0, len(images), batch_size):
+            batch = images[i:i+batch_size]
+            batch = torch.stack(batch).to(device)
+            feats = model(batch)
+            feats = torch.nn.functional.adaptive_avg_pool2d(feats, (1, 1))
+            feats = feats.view(feats.size(0), -1)
+            feats = feats / feats.norm(dim=-1, keepdim=True)
+            all_features.append(feats.cpu())
+    return torch.cat(all_features).to(device)
 
 def load_images_from_folder(folder):
     images, filenames = [], []
@@ -62,7 +69,7 @@ def load_images_from_folder(folder):
                 filenames.append(fname)
             except Exception as e:
                 print(f"Errore con {fname}: {e}")
-    return torch.stack(images).to(device), filenames
+    return images, filenames
 
 print("📥 Caricamento immagini gallery...")
 gallery_images, gallery_filenames = load_images_from_folder(GALLERY_DIR)
