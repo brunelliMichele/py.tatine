@@ -18,10 +18,10 @@ from submit import submit
 
 QUERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "data", "test", "gallery")
-TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "data", "training"))
+TRAIN_DIR = os.path.join(BASE_DIR, "..", "data", "train")
 print(f"Resolved QUERY_DIR: {QUERY_DIR}")
 print(f"Resolved GALLERY_DIR: {GALLERY_DIR}")
-print(f"📁 Looking for training data in: {TRAIN_DIR}")
+print(f"Resolved TRAIN_DIR: {TRAIN_DIR}")
 if not os.path.exists(GALLERY_DIR):
     raise FileNotFoundError(f"❌ Directory not found: {GALLERY_DIR}")
 OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
@@ -48,6 +48,29 @@ def load_images_from_folder(folder):
             except Exception as e:
                 print(f"Errore con {fname}: {e}")
     return images, filenames
+
+class SimpleImageDataset(torch.utils.data.Dataset):
+    def __init__(self, folder, preprocess):
+        self.image_paths = []
+        self.labels = []
+        self.label_map = {}
+        self.preprocess = preprocess
+        for idx, label in enumerate(sorted(os.listdir(folder))):
+            class_dir = os.path.join(folder, label)
+            if os.path.isdir(class_dir):
+                self.label_map[label] = idx
+                for fname in os.listdir(class_dir):
+                    if fname.lower().endswith(('.jpg', '.jpeg', '.png')):
+                        self.image_paths.append(os.path.join(class_dir, fname))
+                        self.labels.append(idx)
+
+    def __len__(self):
+        return len(self.image_paths)
+
+    def __getitem__(self, idx):
+        img = self.preprocess(Image.open(self.image_paths[idx]).convert("RGB"))
+        label = self.labels[idx]
+        return img, label
 
 def show_retrieval_results(query_dir, gallery_dir, results):
     for query_fname, gallery_list in results.items():
@@ -87,6 +110,33 @@ print(f"✅ {len(gallery_images)} immagini caricate nella gallery")
 print("🔄 Estrazione feature gallery...")
 gallery_features = extract_clip_features(model, gallery_images)
 
+print("🧪 Preparazione dataloader per training...")
+train_dataset = SimpleImageDataset(TRAIN_DIR, preprocess)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True)
+
+# 🚀 Inizio fine-tuning CLIP con classificazione supervisionata...
+print("🚀 Inizio fine-tuning CLIP con classificazione supervisionata...")
+model.train()
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-5)
+criterion = torch.nn.CrossEntropyLoss()
+
+for epoch in range(1):  # Cambia il numero di epoche se serve
+    total_loss = 0.0
+    for images, labels in train_loader:
+        images, labels = images.to(device), labels.to(device)
+        optimizer.zero_grad()
+        features = model.encode_image(images).float()
+        features = features / features.norm(dim=-1, keepdim=True)
+        logits = features @ features.T
+        targets = torch.arange(len(images), device=device)
+        loss = criterion(logits, targets)
+        loss.backward()
+        optimizer.step()
+        total_loss += loss.item()
+
+    print(f"📉 Fine epoca: loss media = {total_loss / len(train_loader):.4f}")
+model.eval()
+
 print("🔄 Caricamento immagini query...")
 query_images, query_filenames = load_images_from_folder(QUERY_DIR)
 print(f"✅ {len(query_images)} immagini query caricate")
@@ -94,14 +144,16 @@ print(f"✅ {len(query_images)} immagini query caricate")
 print("🔄 Estrazione feature query e retrieval...")
 results = {}
 
-query_features = extract_clip_features(model, query_images)
+with torch.no_grad():
+    query_features = model.encode_image(query_images).float()
+    query_features /= query_features.norm(dim=-1, keepdim=True)
 
-similarity = query_features @ gallery_features.T  # (num_query, num_gallery)
-topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
+    similarity = query_features @ gallery_features.T  # (num_query, num_gallery)
+    topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
 
-for i, query_fname in enumerate(query_filenames):
-    top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
-    results[query_fname] = top_gallery_files
+    for i, query_fname in enumerate(query_filenames):
+        top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
+        results[query_fname] = top_gallery_files
 
 print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
