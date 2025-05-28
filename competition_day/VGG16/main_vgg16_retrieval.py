@@ -16,7 +16,7 @@ from tensorflow.keras.models import load_model
 
 # Controlla se esiste il modello fine-tuned
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FINETUNED_MODEL_PATH = os.path.join(BASE_DIR, "..", "vgg16_finetuned_from_script.keras")
+FINETUNED_MODEL_PATH = os.path.join(BASE_DIR, "vgg16_finetuned_from_script.keras")
 if not os.path.exists(FINETUNED_MODEL_PATH):
     print("⚠️  Modello fine-tuned non trovato, lo creo ora...")
     import subprocess
