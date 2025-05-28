@@ -54,7 +54,7 @@ def create_image_strip(query_path, similar_paths, size=(224, 224)):
     return strip
 
 # Directories
-base_data_dir = "data/test"
+base_data_dir = "competition_day/data/test"
 gallery_dir = os.path.join(base_data_dir, "gallery")
 query_dir = os.path.join(base_data_dir, "query")
 

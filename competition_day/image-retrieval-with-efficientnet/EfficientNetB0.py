@@ -1,3 +1,5 @@
+$env:TF_ENABLE_ONEDNN_OPTS="0"
+
 import numpy as np
 import tensorflow as tf
 import cv2
@@ -24,8 +26,8 @@ def extract_features(image_path):
     return features.flatten()
 
 # --- Paths ---
-gallery_dir = "data/test/gallery"
-query_dir = "data/test/query"
+gallery_dir = "./competition_day/data/test/gallery"
+query_dir = "./competition_day/data/test/query"
 top_n = 10
 
 # --- Extract gallery features ---
