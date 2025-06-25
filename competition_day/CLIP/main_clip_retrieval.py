@@ -91,7 +91,7 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.show()
 
 
-def extract_clip_features(model, images, batch_size=16):
+def extract_clip_features(model, images, batch_size=4):
     model.eval()
     all_features = []
     with torch.no_grad():
@@ -112,7 +112,7 @@ gallery_features = extract_clip_features(model, gallery_images)
 
 print("🧪 Preparazione dataloader per training...")
 train_dataset = SimpleImageDataset(TRAIN_DIR, preprocess)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=4, shuffle=True)
 
 # Add a linear classification head for fine-tuning
 projection_head = torch.nn.Linear(model.visual.output_dim, len(train_dataset.label_map)).to(device)
@@ -146,16 +146,14 @@ print(f"✅ {len(query_images)} immagini query caricate")
 print("🔄 Estrazione feature query e retrieval...")
 results = {}
 
-with torch.no_grad():
-    query_features = model.encode_image(query_images).float()
-    query_features /= query_features.norm(dim=-1, keepdim=True)
+query_features = extract_clip_features(model, query_images)
 
-    similarity = query_features @ gallery_features.T  # (num_query, num_gallery)
-    topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
+similarity = query_features @ gallery_features.T  # (num_query, num_gallery)
+topk_values, topk_indices = similarity.topk(TOP_K, dim=1)
 
-    for i, query_fname in enumerate(query_filenames):
-        top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
-        results[query_fname] = top_gallery_files
+for i, query_fname in enumerate(query_filenames):
+    top_gallery_files = [gallery_filenames[idx] for idx in topk_indices[i]]
+    results[query_fname] = top_gallery_files
 
 print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
