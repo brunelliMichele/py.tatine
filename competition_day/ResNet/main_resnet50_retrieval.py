@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import subprocess
 import json
 import torch
@@ -147,6 +152,8 @@ with open(OUTPUT_FILE, 'w') as f:
     json.dump(results, f, indent=2)
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
+submit(results, "Py.tatine")
+
 
 # Mostra risultati
-show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)

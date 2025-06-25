@@ -4,6 +4,11 @@ import numpy as np
 import tensorflow as tf
 import cv2
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 from annoy import AnnoyIndex
 
@@ -26,8 +31,20 @@ def extract_features(image_path):
     return features.flatten()
 
 # --- Paths ---
+<<<<<<< HEAD
 gallery_dir = "./competition_day/data/test/gallery"
 query_dir = "./competition_day/data/test/query"
+=======
+script_dir = os.path.dirname(os.path.abspath(__file__))
+gallery_dir = os.path.abspath(os.path.join(script_dir, "..", "data", "test", "gallery"))
+print(f"📁 Looking for gallery images in: {gallery_dir}")
+query_dir = os.path.abspath(os.path.join(script_dir, "..", "data", "test", "query"))
+print(f"📁 Looking for query images in: {query_dir}")
+query_image_count = sum(1 for _, _, files in os.walk(query_dir) for f in files if f.lower().endswith(('.jpg', '.jpeg', '.png')))
+if query_image_count == 0:
+    raise ValueError(f"❌ No images found in query directory: {query_dir}")
+
+>>>>>>> 87f124a540ab1c13145a4966c374f7f7464033f0
 top_n = 10
 
 # --- Extract gallery features ---
@@ -40,6 +57,9 @@ for root, _, files in os.walk(gallery_dir):
             path = os.path.join(root, filename)
             gallery_filenames.append(path)
             gallery_features.append(extract_features(path))
+if not gallery_filenames:
+    raise ValueError(f"❌ No images found in gallery: {gallery_dir}")
+print(f"🔍 Found {len(gallery_filenames)} gallery images.")
 
 # --- Build Annoy index ---
 feature_dim = len(gallery_features[0])
@@ -71,6 +91,4 @@ with open(output_file, "w") as f:
     json.dump(results, f, indent=2)
 
 print(f"Retrieval complete. Results saved to '{output_file}'.")
-
-
-
+submit(results, "Py.tatine")

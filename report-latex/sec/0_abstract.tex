@@ -1,0 +1,4 @@
+\begin{abstract}
+This paper presents the approach adopted by the team for an image retrieval competition, which required retrieving the top 10 most similar images to a given query image. The dataset included both real and AI-generated images of celebrities. Performance was evaluated using a weighted top-k accuracy metric, assigning 600 points for Top-1, 300 for Top-5, and 100 for Top-10 matches.
+During the model selection phase, the team explored two main categories of architectures: traditional convolutional neural networks (such as ResNet and EfficientNet) and transformer-based models (e.g., DINOv2 and CLIP). After extensive experimentation, several models were identified as promising candidates for fine-tuning, with the expectation of improved accuracy. Nevertheless, the best-performing model on the day of the competition was a non-fine-tuned CLIP model in its  RN50x64 variant.
+\end{abstract}

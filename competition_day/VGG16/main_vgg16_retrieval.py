@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import torch
 from PIL import Image
@@ -11,7 +16,7 @@ from tensorflow.keras.models import load_model
 
 # Controlla se esiste il modello fine-tuned
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FINETUNED_MODEL_PATH = os.path.join(BASE_DIR, "..", "vgg16_finetuned_from_script.keras")
+FINETUNED_MODEL_PATH = os.path.join(BASE_DIR, "vgg16_finetuned_from_script.keras")
 if not os.path.exists(FINETUNED_MODEL_PATH):
     print("⚠️  Modello fine-tuned non trovato, lo creo ora...")
     import subprocess
@@ -39,12 +44,19 @@ model = torch.nn.Sequential(*list(models.vgg16().features)).eval().to(device)  #
 
 
 
-def extract_features(model, images):
+def extract_features(model, images, batch_size=16):
+    model.eval()
+    all_features = []
     with torch.no_grad():
-        features = model(images)
-        features = torch.nn.functional.adaptive_avg_pool2d(features, (1, 1))
-        features = features.view(features.size(0), -1)
-        return features / features.norm(dim=-1, keepdim=True)
+        for i in range(0, len(images), batch_size):
+            batch = images[i:i+batch_size]
+            batch = torch.stack(batch).to(device)
+            feats = model(batch)
+            feats = torch.nn.functional.adaptive_avg_pool2d(feats, (1, 1))
+            feats = feats.view(feats.size(0), -1)
+            feats = feats / feats.norm(dim=-1, keepdim=True)
+            all_features.append(feats.cpu())
+    return torch.cat(all_features).to(device)
 
 def load_images_from_folder(folder):
     images, filenames = [], []
@@ -57,7 +69,7 @@ def load_images_from_folder(folder):
                 filenames.append(fname)
             except Exception as e:
                 print(f"Errore con {fname}: {e}")
-    return torch.stack(images).to(device), filenames
+    return images, filenames
 
 print("📥 Caricamento immagini gallery...")
 gallery_images, gallery_filenames = load_images_from_folder(GALLERY_DIR)
@@ -86,6 +98,8 @@ with open(OUTPUT_FILE, 'w') as f:
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
+submit(results, "Py.tatine")
+
 # --- Visualizzazione risultati ---
 def show_retrieval_results(query_dir, gallery_dir, results):
     for item in results:
@@ -105,4 +119,4 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.tight_layout()
         plt.show()
 
-show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)

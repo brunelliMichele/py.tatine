@@ -1,0 +1,214 @@
+\section{Introduction}
+\label{sec:intro}
+
+
+%-------------------------------------------------------------------------
+\subsection{Task Description}
+
+The machine learning competition focused on top-k similar images retrieval, a relevant computer vision task with many applications across different domains.
+Participants were challenged to develop models capable of identifying and ranking the 10 most similar images to a given query from a large database.
+The core objective was to retrieve the most similar synthetic images from a gallery when given natural query images of celebrities.
+The training set contained approximately 5000 images organized into subfolders by celebrity identity, i.e. with each subfolder containing both natural and synthetic images of the same individual.
+The test set, on the other hand, presented a more constrained scenario: query set consisted of approximately 3000 real images of celebrities, while the gallery contained only synthetic ones. 
+This set up (which was unknown before the competition day) tested models' ability to connect authentic photographs and AI-generated synthetic representations of the same celebrities (and in most cases, the same photo too). 
+For each query image, models were required to retrieve 10 gallery images ranked by similarity, with the most similar image ranked first. 
+The challenge, in fact, laid not onyl in identifying the correct celebrity but also in properly ordering the retrieved results based on visual similarity confidence. 
+
+\subsection{Overview of approaches}
+
+Our team explored multiple architectural paradigms to address this cross-domain retrieval challenge, employing both traditional computer vision approaches and modern foundantion models (??).
+\begin{itemize}
+\item {\bf Traditional CNN Architectures}: starting from traditional convolutional neural networks (including EfficientNet and ResNet), we implemented fine-tuning strategies.
+These architectures were adapted from their original image classification objectives to learn similarity embeddings suitable for retrieval tasks. 
+\item {\bf Transformer-based Models}: given that the details of the task were unknown until the day of the competition, the team expanded the investigation to include transformer-based architectures. 
+We implemented DINO, a self supervised vision transformer that learns robust visual representations through knowledge distillation. 
+Additionally, we employed CLIP (Contrastive Language-Image Pre-training), specifically the RN50x64 variant, which creates joint vision-language embeddings through contrastive learning on large-scale image-text pairs.
+\end{itemize}
+Our approach evolved from conventional supervised fine-tuning towards more sophisticated methods, recognizing the limitations of traditional CNNS for cross-domain tasks, ultimately focusing on models that were pre-trained on diverse data that could capture semantic similarity beyond pixel-level correspondance. 
+
+\subsection{Summary of results }
+The competition revealed significant differences in performance across architectural choices. 
+Despite extensive fine-tuning efforts on the provided training data, both EfficientNet and ResNet architectures demonstrated poor performance across all evaluation metrics. 
+These models struggled significantly with the natural-to-synthetic domain transfer, suggesting that traditional convolutional features learned through supervised fine-tuning were insufficient for bridging the substantial visual gap between authentic photographs and AI-generated celebrity images.
+During the competition, CLIP RN50x64 emerged as the decisive winner, consistently and substantially outperforming all other implemented approaches across all evaluation metrics. 
+Indeed, CLIP RN50x60 achieved a score of 734/1000, summing up scores in Top-1 Accuracy (600 points), Top-5 Accuracy (300 points), and Top-10 Accuracy (100 points).
+This superior performance can be attributed to CLIP's unique contrastive pre-training methodology, which learns to associate visual and textual representations across massive datasets, resulting in more semantically meaningful embeddings that generalize effectively across visual domains.
+
+
+These results highlight a fundamental shift in computer vision capabilities, where foundation models (i.e. an AI neural network — trained on mountains of raw data, generally with unsupervised learning — that can be adapted to accomplish a broad range of tasks) trained on diverse, large-scale data with sophisticated objectives substantially outperform traditional architectures, even when the latter are specifically fine-tuned for the target domain. 
+The findings emphasize the critical importance of pre-training methodology and semantic understanding for challenging cross-domain retrieval tasks in modern computer vision applications.
+
+%-------------------------------------------------------------------------
+\subsection{The ruler}
+The \LaTeX\ style defines a printed ruler which should be present in the version submitted for review.
+The ruler is provided in order that reviewers may comment on particular lines in the paper without circumlocution.
+If you are preparing a document using a non-\LaTeX\ document preparation system, please arrange for an equivalent ruler to appear on the final output pages.
+The presence or absence of the ruler should not change the appearance of any other content on the page.
+The camera-ready copy should not contain a ruler.
+(\LaTeX\ users may use options of \texttt{cvpr.sty} to switch between different versions.)
+
+Reviewers:
+note that the ruler measurements do not align well with lines in the paper --- this turns out to be very difficult to do well when the paper contains many figures and equations, and, when done, looks ugly.
+Just use fractional references (\eg, this line is $087.5$), although in most cases one would expect that the approximate location will be adequate.
+
+
+\subsection{Paper ID}
+Make sure that the Paper ID from the submission system is visible in the version submitted for review (replacing the ``*****'' you see in this document).
+If you are using the \LaTeX\ template, \textbf{make sure to update paper ID in the appropriate place in the tex file}.
+
+
+\subsection{Mathematics}
+
+Please number all of your sections and displayed equations as in these examples:
+\begin{equation}
+  E = m\cdot c^2
+  \label{eq:important}
+\end{equation}
+and
+\begin{equation}
+  v = a\cdot t.
+  \label{eq:also-important}
+\end{equation}
+It is important for readers to be able to refer to any particular equation.
+Just because you did not refer to it in the text does not mean some future reader might not need to refer to it.
+It is cumbersome to have to use circumlocutions like ``the equation second from the top of page 3 column 1''.
+(Note that the ruler will not be present in the final copy, so is not an alternative to equation numbers).
+All authors will benefit from reading Mermin's description of how to write mathematics:
+\url{http://www.pamitc.org/documents/mermin.pdf}.
+
+\subsection{Blind review}
+
+Many authors misunderstand the concept of anonymizing for blind review.
+Blind review does not mean that one must remove citations to one's own work---in fact it is often impossible to review a paper unless the previous citations are known and available.
+
+Blind review means that you do not use the words ``my'' or ``our'' when citing previous work.
+That is all.
+(But see below for tech reports.)
+
+Saying ``this builds on the work of Lucy Smith [1]'' does not say that you are Lucy Smith;
+it says that you are building on her work.
+If you are Smith and Jones, do not say ``as we show in [7]'', say ``as Smith and Jones show in [7]'' and at the end of the paper, include reference 7 as you would any other cited work.
+
+An example of a bad paper just asking to be rejected:
+\begin{quote}
+\begin{center}
+    An analysis of the frobnicatable foo filter.
+\end{center}
+
+   In this paper we present a performance analysis of our previous paper [1], and show it to be inferior to all previously known methods.
+   Why the previous paper was accepted without this analysis is beyond me.
+
+   [1] Removed for blind review
+\end{quote}
+
+
+An example of an acceptable paper:
+\begin{quote}
+\begin{center}
+     An analysis of the frobnicatable foo filter.
+\end{center}
+
+   In this paper we present a performance analysis of the  paper of Smith \etal [1], and show it to be inferior to all previously known methods.
+   Why the previous paper was accepted without this analysis is beyond me.
+
+   [1] Smith, L and Jones, C. ``The frobnicatable foo filter, a fundamental contribution to human knowledge''. Nature 381(12), 1-213.
+\end{quote}
+
+If you are making a submission to another conference at the same time, which covers similar or overlapping material, you may need to refer to that submission in order to explain the differences, just as you would if you had previously published related work.
+In such cases, include the anonymized parallel submission~\cite{Authors14} as supplemental material and cite it as
+\begin{quote}
+[1] Authors. ``The frobnicatable foo filter'', F\&G 2014 Submission ID 324, Supplied as supplemental material {\tt fg324.pdf}.
+\end{quote}
+
+Finally, you may feel you need to tell the reader that more details can be found elsewhere, and refer them to a technical report.
+For conference submissions, the paper must stand on its own, and not {\em require} the reviewer to go to a tech report for further details.
+Thus, you may say in the body of the paper ``further details may be found in~\cite{Authors14b}''.
+Then submit the tech report as supplemental material.
+Again, you may not assume the reviewers will read this material.
+
+Sometimes your paper is about a problem which you tested using a tool that is widely known to be restricted to a single institution.
+For example, let's say it's 1969, you have solved a key problem on the Apollo lander, and you believe that the 1970 audience would like to hear about your
+solution.
+The work is a development of your celebrated 1968 paper entitled ``Zero-g frobnication: How being the only people in the world with access to the Apollo lander source code makes us a wow at parties'', by Zeus \etal.
+
+You can handle this paper like any other.
+Do not write ``We show how to improve our previous work [Anonymous, 1968].
+This time we tested the algorithm on a lunar lander [name of lander removed for blind review]''.
+That would be silly, and would immediately identify the authors.
+Instead write the following:
+\begin{quotation}
+\noindent
+   We describe a system for zero-g frobnication.
+   This system is new because it handles the following cases:
+   A, B.  Previous systems [Zeus et al. 1968] did not  handle case B properly.
+   Ours handles it by including a foo term in the bar integral.
+
+   ...
+
+   The proposed system was integrated with the Apollo lunar lander, and went all the way to the moon, don't you know.
+   It displayed the following behaviours, which show how well we solved cases A and B: ...
+\end{quotation}
+As you can see, the above text follows standard scientific convention, reads better than the first version, and does not explicitly name you as the authors.
+A reviewer might think it likely that the new paper was written by Zeus \etal, but cannot make any decision based on that guess.
+He or she would have to be sure that no other authors could have been contracted to solve problem B.
+\medskip
+
+\noindent
+FAQ\medskip\\
+{\bf Q:} Are acknowledgements OK?\\
+{\bf A:} No.  Leave them for the final copy.\medskip\\
+{\bf Q:} How do I cite my results reported in open challenges?
+{\bf A:} To conform with the double-blind review policy, you can report results of other challenge participants together with your results in your paper.
+For your results, however, you should not identify yourself and should not mention your participation in the challenge.
+Instead present your results referring to the method proposed in your paper and draw conclusions based on the experimental comparison to other results.\medskip\\
+
+\begin{figure}[t]
+  \centering
+  \fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
+   %\includegraphics[width=0.8\linewidth]{egfigure.eps}
+
+   \caption{Example of caption.
+   It is set in Roman so that mathematics (always set in Roman: $B \sin A = A \sin B$) may be included without an ugly clash.}
+   \label{fig:onecol}
+\end{figure}
+
+\subsection{Miscellaneous}
+
+\noindent
+Compare the following:\\
+\begin{tabular}{ll}
+ \verb'$conf_a$' &  $conf_a$ \\
+ \verb'$\mathit{conf}_a$' & $\mathit{conf}_a$
+\end{tabular}\\
+See The \TeX book, p165.
+
+The space after \eg, meaning ``for example'', should not be a sentence-ending space.
+So \eg is correct, {\em e.g.} is not.
+The provided \verb'\eg' macro takes care of this.
+
+When citing a multi-author paper, you may save space by using ``et alia'', shortened to ``\etal'' (not ``{\em et.\ al.}'' as ``{\em et}'' is a complete word).
+If you use the \verb'\etal' macro provided, then you need not worry about double periods when used at the end of a sentence as in Alpher \etal.
+However, use it only when there are three or more authors.
+Thus, the following is correct:
+   ``Frobnication has been trendy lately.
+   It was introduced by Alpher~\cite{Alpher02}, and subsequently developed by
+   Alpher and Fotheringham-Smythe~\cite{Alpher03}, and Alpher \etal~\cite{Alpher04}.''
+
+This is incorrect: ``... subsequently developed by Alpher \etal~\cite{Alpher03} ...'' because reference~\cite{Alpher03} has just two authors.
+
+\begin{figure*}
+  \centering
+  \begin{subfigure}{0.68\linewidth}
+    \fbox{\rule{0pt}{2in} \rule{.9\linewidth}{0pt}}
+    \caption{An example of a subfigure.}
+    \label{fig:short-a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.28\linewidth}
+    \fbox{\rule{0pt}{2in} \rule{.9\linewidth}{0pt}}
+    \caption{Another example of a subfigure.}
+    \label{fig:short-b}
+  \end{subfigure}
+  \caption{Example of a short caption, which should be centered.}
+  \label{fig:short}
+\end{figure*}

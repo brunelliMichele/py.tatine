@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import cv2
 import numpy as np
@@ -42,18 +47,23 @@ def create_image_strip(query_path, similar_paths, size=(224, 224)):
     return np.concatenate(images, axis=1)
 
 # --- Set up directories ---
-base_data_dir = "data/test"
-gallery_dir = os.path.join(base_data_dir, "gallery")
-query_dir = os.path.join(base_data_dir, "query")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+gallery_dir = os.path.join(script_dir, "..", "data", "test", "gallery")
+gallery_dir = os.path.abspath(gallery_dir)
+query_dir = os.path.join(script_dir, "..", "data", "test", "query")
+query_dir = os.path.join(query_dir)
 top_n = 10
 
 # --- Extract gallery features ---
 print("Extracting gallery features...")
+print(f"📁 Looking for images in: {gallery_dir}")
 gallery_images = [
     os.path.join(root, file)
     for root, _, files in os.walk(gallery_dir)
     for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))
 ]
+if not gallery_images:
+    raise ValueError(f"❌ Nessuna immagine trovata nella gallery: {gallery_dir}")
 gallery_features = [extract_features(p) for p in gallery_images]
 
 # --- Build Annoy index ---
@@ -79,10 +89,10 @@ for i, query_path in enumerate(query_images):
     similar_idxs = annoy_index.get_nns_by_vector(query_feature, top_n)
     similar_paths = [gallery_images[idx] for idx in similar_idxs]
 
-    # Show image strip
-    strip_img = create_image_strip(query_path, similar_paths)
-    cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
-    cv2.waitKey(2000)
+    # # Show image strip
+    # strip_img = create_image_strip(query_path, similar_paths)
+    # cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
+    # cv2.waitKey(2000)
 
     # Save result
     query_fname = os.path.basename(query_path).replace("\\", "/")
@@ -98,3 +108,4 @@ with open(output_file, "w") as f:
     json.dump(results, f, indent=2)
 
 print(f"\nRetrieval complete. Results saved to '{output_file}'.")
+submit(results, "Py.tatine")

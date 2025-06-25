@@ -14,7 +14,7 @@ MODEL_SAVE_PATH = os.path.join(BASE_DIR, "..", "resnet50_finetuned.pth")
 
 # ⚙️ Parametri
 BATCH_SIZE = 32
-NUM_EPOCHS = 10
+NUM_EPOCHS = 20
 LEARNING_RATE = 0.001
 NUM_WORKERS = 0
 

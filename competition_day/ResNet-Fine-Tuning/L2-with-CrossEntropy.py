@@ -1,4 +1,9 @@
 import os
+import sys
+# In alto, sotto import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+from submit import submit
 import json
 import torch
 import torchvision.transforms as transforms
@@ -33,11 +38,14 @@ transform = transforms.Compose([
 
 # Caricamento dati training
 train_dataset = ImageFolder(TRAIN_DIR, transform=transform)
+print("Classi trovate:", train_dataset.class_to_idx)
+print("Numero classi:", len(train_dataset.classes))
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
 # Modello base
 model = resnet18(weights=ResNet18_Weights.DEFAULT)
-model.fc = nn.Linear(model.fc.in_features, EMBEDDING_SIZE)
+NUM_CLASSES = len(train_dataset.classes)
+model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
 model = model.to(DEVICE)
 
 # Ottimizzatore e loss
@@ -52,7 +60,14 @@ def train():
             inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
             optimizer.zero_grad()
             outputs = model(inputs)
+            print("Labels dtype:", labels.dtype)
+            print("Labels min:", labels.min().item(), "max:", labels.max().item())
+            print("Outputs shape:", outputs.shape)
             loss = criterion(outputs, labels)
+            print("Labels shape:", labels.shape)
+            print("Labels dtype:", labels.dtype)
+            print("Labels min/max:", labels.min().item(), labels.max().item())
+            print("Outputs shape:", outputs.shape)
             loss.backward()
             optimizer.step()
             epoch_loss += loss.item()
@@ -60,20 +75,23 @@ def train():
     torch.save(model.state_dict(), 'best_model.pth')
 
 # Estrazione feature
+feature_model = resnet18(weights=ResNet18_Weights.DEFAULT)
+feature_model.fc = nn.Identity()
+feature_model.load_state_dict(torch.load('best_model.pth'), strict=False)
+feature_model = feature_model.to(DEVICE)
 def extract_features(directory):
-    model.eval()
+    feature_model.eval()
     features = []
     paths = []
     with torch.no_grad():
-        for img_name in tqdm(os.listdir(directory), desc=f"Extracting from {directory}"): #FORSE OS.WALK? 
+        for img_name in tqdm(os.listdir(directory), desc=f"Extracting from {directory}"):
             img_path = os.path.join(directory, img_name)
             image = Image.open(img_path).convert('RGB')
             tensor = transform(image).unsqueeze(0).to(DEVICE)
-            feat = model(tensor).cpu().numpy().flatten()
+            feat = feature_model(tensor).cpu().numpy().flatten()
             features.append(feat)
             paths.append(img_path)
     return np.array(features).astype('float32'), paths
-
 # Retrieval
 def retrieve():
     gallery_feats, gallery_paths = extract_features(GALLERY_DIR)
@@ -92,6 +110,8 @@ def retrieve():
     with open(OUTPUT_JSON, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"Results saved to {OUTPUT_JSON}")
+
+    submit(results, "Py.tatine")
 
 if __name__ == '__main__':
     train()
