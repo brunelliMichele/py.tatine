@@ -1,14 +1,12 @@
 \section{Models considered}
 \label{sec:formatting}
 
-All text must be in a two-column format.
-The total allowable size of the text area is $6\frac78$ inches (17.46 cm) wide by $8\frac78$ inches (22.54 cm) high.
-Columns are to be $3\frac14$ inches (8.25 cm) wide, with a $\frac{5}{16}$ inch (0.8 cm) space between them.
-The main title (on the first page) should begin 1 inch (2.54 cm) from the top edge of the page.
-The second and following pages should begin 1 inch (2.54 cm) from the top edge.
-On all pages, the bottom margin should be $1\frac{1}{8}$ inches (2.86 cm) from the bottom edge of the page for $8.5 \times 11$-inch paper;
-for A4 paper, approximately $1\frac{5}{8}$ inches (4.13 cm) from the bottom edge of the
-page.
+Since we did not know what the images would include thematically, nor if said images were photos, drawings or AI generated content, we selected a broad range of image encoders.
+We considered both convolutional neural networks and transform-based models, to ensure coverage about various domains and levels of abstraction.
+The assumption was that general-purpose visual encoders pretrained on large-scale datasets might transfer effectively, regardless of the final test images.
+We began with three well-known convolutional backbones: ResNet~\cite{he2016deep}, EfficientNet~\cite{tan2019efficientnet} and VGG-16~\cite{simonyan2015very}. All were pretrained on ImageNet and used in a frozen configuration to extract global feature embeddings.
+Traditional CNNs however, even when deep and pretrained, tend to emphasize local structure and low-frequency texture patterns~\cite{geirhos2019imagenet}. This often leads to oversensitivity to style, which was the main factor that determined their poor performance in the competition.
+In contrast, transformer-based encoders, especially those trained with contrastive objectives (e.g., CLIP~\cite{radford2021learning}) or self-distillation frameworks (e.g., DINO~\cite{caron2021emerging}), have demonstrated the ability to encode more abstract, globally-consistent representations, which we tought would be more suitable for an unknown setting such as the competition.
 
 %-------------------------------------------------------------------------
 \subsection{EfficientNet}
