@@ -11,20 +11,23 @@ for A4 paper, approximately $1\frac{5}{8}$ inches (4.13 cm) from the bottom edge
 page.
 
 %-------------------------------------------------------------------------
-\subsection{Margins and page numbering}
+\subsection{EfficientNet}
 
-All printed material, including text, illustrations, and charts, must be kept
-within a print area $6\frac{7}{8}$ inches (17.46 cm) wide by $8\frac{7}{8}$ inches (22.54 cm)
-high.
-%
-Page numbers should be in the footer, centered and $\frac{3}{4}$ inches from the bottom of the page.
-The review version should have page numbers, yet the final version submitted as camera ready should not show any page numbers.
-The \LaTeX\ template takes care of this when used properly.
+EfficientNet is a convolutional neural network (CNN) architecture that introduces a systematic scaling method to optimize model performance. 
+Instead of arbitrarily increasing network depth, width, or input resolution, EfficientNet uniformly scales these three dimensions using a compound scaling coefficient. 
+This approach is based on the intuition that:
+\begin{itemize}
+\item {\bf Larger input images require greater depth} to capture long-range dependencies 
+\item {\bf Increased width} is needed to learn more detailed and fine-grained features 
+\item {\bf Higher resolution} inputs should be accompanied by proportional increases in both depth and width in order to maintain a balanced and efficient network structure
+\end{itemize}
+
+By coordinating these scaling dimensions through fixed scaling factors, EfficientNet achieves a better trade-off between accuracy and efficiency compared to traditional CNN architectures.
 
 
 
 %-------------------------------------------------------------------------
-\subsection{Type style and fonts}
+\subsection{ResNet}
 
 Wherever Times is specified, Times Roman may also be used.
 If neither is available on your word processor, please use the font closest in
@@ -64,7 +67,7 @@ SECOND-ORDER HEADINGS.
 If you require a third-order heading (we discourage it), use 10-point Times, boldface, initially capitalized, flush left, preceded by one blank line, followed by a period and your text on the same line.
 
 %-------------------------------------------------------------------------
-\subsection{Footnotes}
+\subsection{VGG}
 
 Please use footnotes\footnote{This is what a footnote looks like.
 It often distracts the reader from the main flow of the argument.} sparingly.
@@ -74,7 +77,7 @@ Use Times 8-point type, single-spaced.
 
 
 %-------------------------------------------------------------------------
-\subsection{Cross-references}
+\subsection{DINO V2}
 
 For the benefit of author(s) and readers, please use the
 {\small\begin{verbatim}
@@ -96,7 +99,7 @@ command. Here is an example:
 \end{quotation}
 
 %-------------------------------------------------------------------------
-\subsection{References}
+\subsection{CLIP}
 
 List and number all bibliographical references in 9-point Times, single-spaced, at the end of your paper.
 When referenced in the text, enclose the citation number in square brackets, for
