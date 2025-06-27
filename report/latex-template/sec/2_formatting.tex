@@ -77,7 +77,7 @@ Retrieval rankings often favored images with similar lighting or pose over those
 %-------------------------------------------------------------------------
 \subsection{DINO V2}
 
-DINOv2~\cite{caron2021emerging} is a recent self-supervised vision transformer (ViT) trained using a teacher-student framework that avoids the need for manual labels. Unlike traditional supervised learning, DINO trains models to maximize consistency across different augmented views of the same image.
+Meta's DINOv2~\cite{caron2021emerging} is a recent self-supervised vision transformer (ViT) trained using a teacher-student framework that avoids the need for manual labels. Unlike traditional supervised learning, DINO trains models to maximize consistency across different augmented views of the same image.
 This promotes the learning of features that are robust to low-level variations such as texture, lighting, and background, and encourages a focus on object-level or identity-preserving semantics.
 For those reasons it showcases an ability to generalize across different visual domains without the need for fine tuning, which made it an obvious choice, given the task.
 Specifically we used the vit_base_patch16_224.dino model. This corresponds to a Vision Transformer (ViT-B/16) trained using the original DINO self-supervised framework~\cite{caron2021emerging}, due to its capacity to form semantically coherent representations without requiring human-labeled supervision.
@@ -88,12 +88,15 @@ Additionally, adding a fine-tuning layer did not help; in fact, the performance 
 %-------------------------------------------------------------------------
 \subsection{CLIP}
 
-List and number all bibliographical references in 9-point Times, single-spaced, at the end of your paper.
-When referenced in the text, enclose the citation number in square brackets, for
-example~\cite{Authors14}.
-Where appropriate, include page numbers and the name(s) of editors of referenced books.
-When you cite multiple papers at once, please make sure that you cite them in numerical order like this \cite{Alpher02,Alpher03,Alpher05,Authors14b,Authors14}.
-If you use the template as advised, this will be taken care of automatically.
+The CLIP (Contrastive Language–Image Pretraining) framework, developed by OpenAI, was the most effective model we evaluated. CLIP is trained on hundreds of millions of image-text pairs scraped from the internet, learning to align images and natural language descriptions in a shared embedding space.
+This multimodal contrastive training equips CLIP with a robust understanding of high-level semantics, making it especially well-suited for retrieval tasks where visual similarity is more conceptual~\cite{radford2021learning}.
+We tested several variants of CLIP in frozen mode, including ViT-B/16, ViT-L/14, and RN50x64. All models were evaluated by computing cosine similarity between image embeddings. Among them, RN50x64 obtained the best performance during the competition window.
+Another factor in the choice to deploy it was that it is trained on a wide range of image-text pairs during training, CLIP generalizes well to new domains and unseen classes and it should also achieve high performances in unlabeled settings.
+As seen, CLIP models come in multiple architectural forms — most notably Vision Transformers (ViTs) and ResNet-based (RN) backbones. We chose to evaluate both because each brings different inductive biases and practical trade-offs that can influence retrieval performance depending on the task.
+While ViT based models are particularly adept at capturing long-range semantic relationships and context-aware representations~\cite{dosovitskiy2021an}, ResNet based models are often more robust to small-scale distortions, faster to train or fine-tune, and more efficient in memory-constrained environments. Their convolutional structure also tends to preserve fine-grained spatial details that are useful in identity-level retrieval~\cite{he2016deep}.
+We decided to test both because of the unknown nature of the retrieval task we would face.
+During competition, we choose to fine-tune only RN50x64 for time issues, and we choose it because we hypotized that ResNets would be more stable during fine-tuning, especially on small datasets; also RN50x64 is significantly more memory-efficient than ViT-L/14, which was key given the context.
+
 
 \begin{table}
   \centering
