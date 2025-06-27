@@ -67,34 +67,23 @@ If you require a third-order heading (we discourage it), use 10-point Times, bol
 %-------------------------------------------------------------------------
 \subsection{VGG}
 
-Please use footnotes\footnote{This is what a footnote looks like.
-It often distracts the reader from the main flow of the argument.} sparingly.
-Indeed, try to avoid footnotes altogether and include necessary peripheral observations in the text (within parentheses, if you prefer, as in this sentence).
-If you wish to use a footnote, place it at the bottom of the column on the page on which it is referenced.
-Use Times 8-point type, single-spaced.
-
+VGG-16 is a classical convolutional architecture known for its simplicity and uniform design, consisting of sequential 3×3 convolutional layers followed by max-pooling and fully connected layers~\cite{simonyan2015very}.
+We decided to try it because of its layer-wise simplicity and consistent use of small convolutional filters make it interpretable and stable across a variety of visual tasks.
+We included VGG-16 as a diagnostic baseline to validate our retrieval pipeline and to assess how well a classical CNN performs on a modern cross-domain retrieval task.
+However, in our retrieval scenario, it exhibited several limitations. Its strong reliance on local texture patterns made it susceptible to the types of superficial variations introduced by synthetic image generation — such as lighting inconsistencies, skin smoothness artifacts, or uniform backgrounds.
+Additionally, the absence of skip connections limited its ability to integrate deep semantic context, which proved essential for cross-domain identity recognition.
+Retrieval rankings often favored images with similar lighting or pose over those with true identity matches. These results aligned with prior findings that CNNs trained on ImageNet are overly texture-biased~\cite{geirhos2019imagenet},
 
 %-------------------------------------------------------------------------
 \subsection{DINO V2}
 
-For the benefit of author(s) and readers, please use the
-{\small\begin{verbatim}
-  \cref{...}
-\end{verbatim}}  command for cross-referencing to figures, tables, equations, or sections.
-This will automatically insert the appropriate label alongside the cross-reference as in this example:
-\begin{quotation}
-  To see how our method outperforms previous work, please see \cref{fig:onecol} and \cref{tab:example}.
-  It is also possible to refer to multiple targets as once, \eg~to \cref{fig:onecol,fig:short-a}.
-  You may also return to \cref{sec:formatting} or look at \cref{eq:also-important}.
-\end{quotation}
-If you do not wish to abbreviate the label, for example at the beginning of the sentence, you can use the
-{\small\begin{verbatim}
-  \Cref{...}
-\end{verbatim}}
-command. Here is an example:
-\begin{quotation}
-  \Cref{fig:onecol} is also quite important.
-\end{quotation}
+DINOv2~\cite{caron2021emerging} is a recent self-supervised vision transformer (ViT) trained using a teacher-student framework that avoids the need for manual labels. Unlike traditional supervised learning, DINO trains models to maximize consistency across different augmented views of the same image.
+This promotes the learning of features that are robust to low-level variations such as texture, lighting, and background, and encourages a focus on object-level or identity-preserving semantics.
+For those reasons it showcases an ability to generalize across different visual domains without the need for fine tuning, which made it an obvious choice, given the task.
+Specifically we used the vit_base_patch16_224.dino model. This corresponds to a Vision Transformer (ViT-B/16) trained using the original DINO self-supervised framework~\cite{caron2021emerging}, due to its capacity to form semantically coherent representations without requiring human-labeled supervision.
+Neverthless, we obtained very low performances during the competition, probably because Dino is not trained to distinguish between identities and it lacks explicit supervision for facial or fine-grained matching tasks, as argued by Oquab et al.~\cite{oquab2023dinov2}.
+Additionally, adding a fine-tuning layer did not help; in fact, the performance decreased. Our most likely explanation for such a result is that being pre-trained with unlabeled semantic relationships, fine-tuning it on a labeled training set might distort its geometry~\cite{oquab2023dinov2}.
+
 
 %-------------------------------------------------------------------------
 \subsection{CLIP}
