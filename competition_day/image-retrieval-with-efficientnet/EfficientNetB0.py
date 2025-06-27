@@ -1,3 +1,5 @@
+$env:TF_ENABLE_ONEDNN_OPTS="0"
+
 import numpy as np
 import tensorflow as tf
 import cv2
@@ -29,6 +31,10 @@ def extract_features(image_path):
     return features.flatten()
 
 # --- Paths ---
+<<<<<<< HEAD
+gallery_dir = "./competition_day/data/test/gallery"
+query_dir = "./competition_day/data/test/query"
+=======
 script_dir = os.path.dirname(os.path.abspath(__file__))
 gallery_dir = os.path.abspath(os.path.join(script_dir, "..", "data", "test", "gallery"))
 print(f"📁 Looking for gallery images in: {gallery_dir}")
@@ -38,6 +44,7 @@ query_image_count = sum(1 for _, _, files in os.walk(query_dir) for f in files i
 if query_image_count == 0:
     raise ValueError(f"❌ No images found in query directory: {query_dir}")
 
+>>>>>>> 87f124a540ab1c13145a4966c374f7f7464033f0
 top_n = 10
 
 # --- Extract gallery features ---
