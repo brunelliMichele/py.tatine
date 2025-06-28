@@ -35,47 +35,21 @@ Annoy is particularly well-suited for this use case because:
 \item enables {\bf fast retrieval times} with low memory usage thanks to the tree-based structure. 
 \end{itemize}
 
-The attempt to fine-tune EfficientNet did not provide meaningful improvement in model's performance, which is why was not tested on competition day. 
+The attempt to fine-tune EfficientNet did not provide meaningful improvement in model's performance, which is why it was not tested on competition day. 
 
 %-------------------------------------------------------------------------
 \subsection{ResNet}
 
-Wherever Times is specified, Times Roman may also be used.
-If neither is available on your word processor, please use the font closest in
-appearance to Times to which you have access.
-
-MAIN TITLE.
-Center the title $1\frac{3}{8}$ inches (3.49 cm) from the top edge of the first page.
-The title should be in Times 14-point, boldface type.
-Capitalize the first letter of nouns, pronouns, verbs, adjectives, and adverbs;
-do not capitalize articles, coordinate conjunctions, or prepositions (unless the title begins with such a word).
-Leave two blank lines after the title.
-
-AUTHOR NAME(s) and AFFILIATION(s) are to be centered beneath the title
-and printed in Times 12-point, non-boldface type.
-This information is to be followed by two blank lines.
-
-The ABSTRACT and MAIN TEXT are to be in a two-column format.
-
-MAIN TEXT.
-Type main text in 10-point Times, single-spaced.
-Do NOT use double-spacing.
-All paragraphs should be indented 1 pica (approx.~$\frac{1}{6}$ inch or 0.422 cm).
-Make sure your text is fully justified---that is, flush left and flush right.
-Please do not place any additional blank lines between paragraphs.
-
-Figure and table captions should be 9-point Roman type as in \cref{fig:onecol,fig:short}.
-Short captions should be centred.
-
-\noindent Callouts should be 9-point Helvetica, non-boldface type.
-Initially capitalize only the first word of section titles and first-, second-, and third-order headings.
-
-FIRST-ORDER HEADINGS.
-(For example, {\large \bf 1. Introduction}) should be Times 12-point boldface, initially capitalized, flush left, with one blank line before, and one blank line after.
-
-SECOND-ORDER HEADINGS.
-(For example, { \bf 1.1. Database elements}) should be Times 11-point boldface, initially capitalized, flush left, with one blank line before, and one after.
-If you require a third-order heading (we discourage it), use 10-point Times, boldface, initially capitalized, flush left, preceded by one blank line, followed by a period and your text on the same line.
+ResNet (Residual Networks) is a deep convolutional neural network architecture and it introduces residual (or skip) connections, which allow gradients to flow directly thorugh the network, enabling training of much deeper architecture.
+OOur investigation employed three distinct ResNet-based approaches for content-based image retrieval, each implementing different transfer learning paradigms and similarity computation methodologies.
+We utilized a pre-trained ResNet50 model as a fixed feature extractor, leveraging representations learned from ImageNet classification. 
+The network's final fully connected layer was replaced with an identity mapping, transforming the model from a classifier to a feature encoder. This modification enabled extraction of 2048-dimensional feature vectors from the global average pooling layer preceding the original classification head.
+L2-normalized feature vectors were compared using cosine distance to find the 10 most similar images to the query. 
+The second methodology employed ResNet18 architecture with full network fine-tuning using cross-entropy loss for multi-class classification on the target domain. Following training convergence, the classification head was removed, and 512-dimensional feature vectors were extracted from the penultimate layer.
+Similarity search was implemented using Facebook's FAISS (Facebook AI Similarity Search) library with L2 (Euclidean) distance indexing.
+The third strategy implemented selective fine-tuning of ResNet50, where all convolutional layers remained frozen (requires_grad=False) while only the final classification layer underwent parameter updates. 
+This conservative transfer learning approach preserves the robust feature representations learned from ImageNet while adapting the decision boundary to the target classification task.
+After training, the model was suited for feature extraction (by removing the trained classification layer), leading to 2048-dimensional normalized vectors used for similarity computations using cosine distance. 
 
 %-------------------------------------------------------------------------
 \subsection{VGG}
@@ -93,7 +67,7 @@ Retrieval rankings often favored images with similar lighting or pose over those
 Meta's DINOv2~\cite{caron2021emerging} is a recent self-supervised vision transformer (ViT) trained using a teacher-student framework that avoids the need for manual labels. Unlike traditional supervised learning, DINO trains models to maximize consistency across different augmented views of the same image.
 This promotes the learning of features that are robust to low-level variations such as texture, lighting, and background, and encourages a focus on object-level or identity-preserving semantics.
 For those reasons it showcases an ability to generalize across different visual domains without the need for fine tuning, which made it an obvious choice, given the task.
-Specifically we used the vit_ base_patch16_224.dino model. This corresponds to a Vision Transformer (ViT-B/16) trained using the original DINO self-supervised framework~\cite{caron2021emerging}, due to its capacity to form semantically coherent representations without requiring human-labeled supervision.
+Specifically we used the vit_base_patch16_224.dino model. This corresponds to a Vision Transformer (ViT-B/16) trained using the original DINO self-supervised framework~\cite{caron2021emerging}, due to its capacity to form semantically coherent representations without requiring human-labeled supervision.
 Neverthless, we obtained very low performances during the competition, probably because Dino is not trained to distinguish between identities and it lacks explicit supervision for facial or fine-grained matching tasks, as argued by Oquab et al.~\cite{oquab2023dinov2}.
 Additionally, adding a fine-tuning layer did not help; in fact, the performance decreased. Our most likely explanation for such a result is that being pre-trained with unlabeled semantic relationships, fine-tuning it on a labeled training set might distort its geometry~\cite{oquab2023dinov2}.
 

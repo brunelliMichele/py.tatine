@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.6.24)  28 JUN 2025 12:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.6.24)  28 JUN 2025 13:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -425,117 +425,138 @@ File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ) [1{C:/Users/anna2/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
 
 
-]) (sec/2_formatting.tex [2]
-
-LaTeX Warning: Reference `fig:short' on page 1 undefined on input line 67.
-
-
-LaTeX Warning: Reference `fig:onecol' on page 1 undefined on input line 67.
-
-
-Package natbib Warning: Citation `simonyan2015very' on page 3 undefined on input line 83.
-
-
-Package natbib Warning: Citation `geirhos2019imagenet' on page 3 undefined on input line 88.
-
-
-Package natbib Warning: Citation `caron2021emerging' on page 3 undefined on input line 93.
-
-sec/2_formatting.tex:96: Missing $ inserted.
+]) (sec/2_formatting.tex
+sec/2_formatting.tex:50: Missing $ inserted.
 <inserted text> 
                 $
-l.96 Specifically we used the vit_
-                                   base_patch16_224.dino model. This corresp...
+l.50 ...lutional layers remained frozen (requires_
+                                                  grad=False) while only the...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-
-sec/2_formatting.tex:96: LaTeX Error: Command \bfseries invalid in math mode.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.96 ...ervised framework~\cite{caron2021emerging}
-                                                  , due to its capacity to f...
-Please use the math alphabet \mathbf instead of the \bfseries command. 
-
-
-Package natbib Warning: Citation `caron2021emerging' on page 3 undefined on input line 96.
-
-
-sec/2_formatting.tex:97: LaTeX Error: Command \bfseries invalid in math mode.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.97 ...ued by Oquab et al.~\cite{oquab2023dinov2}
-                                                  .
-Please use the math alphabet \mathbf instead of the \bfseries command. 
-
-
-Package natbib Warning: Citation `oquab2023dinov2' on page 3 undefined on input line 97.
-
-
-sec/2_formatting.tex:98: LaTeX Error: Command \bfseries invalid in math mode.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.98 ...istort its geometry~\cite{oquab2023dinov2}
-                                                  .
-Please use the math alphabet \mathbf instead of the \bfseries command. 
-
-
-Package natbib Warning: Citation `oquab2023dinov2' on page 3 undefined on input line 98.
-
-sec/2_formatting.tex:99: Missing $ inserted.
+sec/2_formatting.tex:53: Missing $ inserted.
 <inserted text> 
                 $
-l.99 
+l.53 
      
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (103.34595pt too wide) in paragraph at lines 93--99
+Overfull \hbox (1386.81746pt too wide) in paragraph at lines 43--53
+\OML/cmm/m/it/10 False\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 whileonlythefinalclassificationlayerunderwentparameterupdates:ThisconservativetransferlearningapproachpreservestherobustfeaturerepresentationslearnedfromImageNetwhileadaptingthedecisionboundarytothetargetclassificationtask:Aftertraining; themodelwassuitedforfeatureextraction\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 byremovingthetrainedclassificationlayer\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; leadingto\OT1/cmr/m/n/10 2048 \OMS/cmsy/m/n/10 ^^@
+ []
+
+
+Overfull \hbox (135.10918pt too wide) in paragraph at lines 43--53
+\OML/cmm/m/it/10 dimensionalnormalizedvectorsusedforsimilaritycomputationsusingcosinedistance:$ 
+ []
+
+[2]
+
+Package natbib Warning: Citation `simonyan2015very' on page 3 undefined on input line 57.
+
+
+Package natbib Warning: Citation `geirhos2019imagenet' on page 3 undefined on input line 62.
+
+
+Package natbib Warning: Citation `caron2021emerging' on page 3 undefined on input line 67.
+
+sec/2_formatting.tex:70: Missing $ inserted.
+<inserted text> 
+                $
+l.70 Specifically we used the vit_
+                                  base_patch16_224.dino model. This correspo...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+sec/2_formatting.tex:70: LaTeX Error: Command \bfseries invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.70 ...ervised framework~\cite{caron2021emerging}
+                                                  , due to its capacity to f...
+Please use the math alphabet \mathbf instead of the \bfseries command. 
+
+
+Package natbib Warning: Citation `caron2021emerging' on page 3 undefined on input line 70.
+
+
+sec/2_formatting.tex:71: LaTeX Error: Command \bfseries invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.71 ...ued by Oquab et al.~\cite{oquab2023dinov2}
+                                                  .
+Please use the math alphabet \mathbf instead of the \bfseries command. 
+
+
+Package natbib Warning: Citation `oquab2023dinov2' on page 3 undefined on input line 71.
+
+
+sec/2_formatting.tex:72: LaTeX Error: Command \bfseries invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.72 ...istort its geometry~\cite{oquab2023dinov2}
+                                                  .
+Please use the math alphabet \mathbf instead of the \bfseries command. 
+
+
+Package natbib Warning: Citation `oquab2023dinov2' on page 3 undefined on input line 72.
+
+sec/2_formatting.tex:73: Missing $ inserted.
+<inserted text> 
+                $
+l.73 
+     
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (103.34595pt too wide) in paragraph at lines 67--73
 \OT1/ptm/m/n/10 vit$[]\OML/cmm/m/it/10 ase[]atch\OT1/cmr/m/n/10 16[]24\OML/cmm/m/it/10 :dinomodel:ThiscorrespondstoaVisionTransformer\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ViT \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Overfull \hbox (266.86925pt too wide) in paragraph at lines 93--99
+Overfull \hbox (266.86925pt too wide) in paragraph at lines 67--73
 \OML/cmm/m/it/10 supervisedframework \OT1/cmr/m/n/10 [[]]\OML/cmm/m/it/10 ; duetoitscapacitytoformsemanticallycoherentrepresentationswithoutrequiringhuman \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Overfull \hbox (657.87892pt too wide) in paragraph at lines 93--99
+Overfull \hbox (657.87892pt too wide) in paragraph at lines 67--73
 \OML/cmm/m/it/10 labeledsupervision:Neverthless; weobtainedverylowperformancesduringthecompetition; probablybecauseDinoisnottrainedtodistinguishbetweenidentitiesanditlacksexplicitsupervisionforfacialorfine \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Overfull \hbox (104.79475pt too wide) in paragraph at lines 93--99
+Overfull \hbox (104.79475pt too wide) in paragraph at lines 67--73
 \OML/cmm/m/it/10 grainedmatchingtasks; asarguedbyOquabetal: \OT1/cmr/m/n/10 [[]]\OML/cmm/m/it/10 :Additionally; addingafine \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Overfull \hbox (278.72362pt too wide) in paragraph at lines 93--99
+Overfull \hbox (278.72362pt too wide) in paragraph at lines 67--73
 \OML/cmm/m/it/10 tuninglayerdidnothelp\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 infact; theperformancedecreased:Ourmostlikelyexplanationforsucharesultisthatbeingpre \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Package natbib Warning: Citation `radford2021learning' on page 3 undefined on input line 105.
+Package natbib Warning: Citation `radford2021learning' on page 3 undefined on input line 79.
 
 
-Package natbib Warning: Citation `dosovitskiy2021an' on page 3 undefined on input line 109.
+Package natbib Warning: Citation `dosovitskiy2021an' on page 3 undefined on input line 83.
 
 
-Package natbib Warning: Citation `he2016deep' on page 3 undefined on input line 109.
+Package natbib Warning: Citation `he2016deep' on page 3 undefined on input line 83.
 
 [3]
-sec/2_formatting.tex:156: Undefined control sequence.
-l.156 ...to the author guidelines on the \confName
+sec/2_formatting.tex:130: Undefined control sequence.
+l.130 ...to the author guidelines on the \confName
                                                   \ \confYear\ web page for ...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -543,8 +564,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-sec/2_formatting.tex:156: Undefined control sequence.
-l.156 ...or guidelines on the \confName\ \confYear
+sec/2_formatting.tex:130: Undefined control sequence.
+l.130 ...or guidelines on the \confName\ \confYear
                                                   \ web page for a discussio...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -572,9 +593,6 @@ L3 programming layer <2024-01-04>
  ***********
 
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 
@@ -585,21 +603,26 @@ Package rerunfilecheck Warning: File `main.out' has changed.
 Package rerunfilecheck Info: Checksums for `main.out':
 (rerunfilecheck)             Before: <no file>
 (rerunfilecheck)             After:  1A73AA38C79D72EA6EE07C1E8704051B;1594.
-Package rerunfilecheck Info: File `main.brf' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+
+Package rerunfilecheck Warning: File `main.brf' has changed.
+(rerunfilecheck)                Rerun to get bibliographical references right.
+
+Package rerunfilecheck Info: Checksums for `main.brf':
+(rerunfilecheck)             Before: CA7CE0625F626EF47EA7D96227821302;496
+(rerunfilecheck)             After:  D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 14751 strings out of 474486
- 246675 string characters out of 5743755
+ 14749 strings out of 474486
+ 246642 string characters out of 5743755
  1948542 words of memory out of 5000000
- 36801 multiletter control sequences out of 15000+600000
+ 36799 multiletter control sequences out of 15000+600000
  584018 words of font info for 91 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 90i,9n,93p,592b,446s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,9n,93p,592b,633s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (4 pages, 149019 bytes).
+Output written on main.pdf (4 pages, 150693 bytes).
 PDF statistics:
- 100 PDF objects out of 1000 (max. 8388607)
+ 107 PDF objects out of 1000 (max. 8388607)
  27 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
