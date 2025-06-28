@@ -81,9 +81,9 @@ for root, _, files in os.walk(QUERY_DIR):
 
 # --- Write to JSON file in the same folder as the script ---
 script_dir = os.path.dirname(os.path.abspath(__file__))
-output_file = os.path.join(script_dir, "retrieval_resultsB0.json")
-with open(output_file, "w") as f:
+OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "EfficientNet", "B0", "submission.json")
+with open(OUTPUT_FILE, "w") as f:
     json.dump(results, f, indent=2)
 
-print(f"Retrieval complete. Results saved to '{output_file}'.")
+print(f"Retrieval complete. Results saved to '{OUTPUT_FILE}'.")
 submit(results, "Py.tatine")

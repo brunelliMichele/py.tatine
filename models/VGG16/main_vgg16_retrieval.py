@@ -27,7 +27,7 @@ if not os.path.exists(FINETUNED_MODEL_PATH):
 QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "gallery")
 TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data", "training"))
-OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "VGG16", "submission.json")
 TOP_K = 10
 
 # Trasformazioni

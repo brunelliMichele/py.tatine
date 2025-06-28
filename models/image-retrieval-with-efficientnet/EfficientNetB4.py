@@ -123,10 +123,10 @@ cv2.destroyAllWindows()
 # Save results JSON in the same folder as the script
 import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
-output_file = os.path.join(script_dir, "retrieval_resultsB4.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "EfficientNet", "B4", "submission.json")
 
-with open(output_file, "w") as f:
+with open(OUTPUT_FILE, "w") as f:
     json.dump(results, f, indent=2)
 
-print(f"\nRetrieval complete. Results saved to '{output_file}'.")
+print(f"\nRetrieval complete. Results saved to '{OUTPUT_FILE}'.")
 submit(results, "Py.tatine")

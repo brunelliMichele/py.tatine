@@ -24,7 +24,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data", "test", "gallery")
 TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "data", "training"))
-OUTPUT_JSON = 'retrieval_results.json'
+OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "ResNet", "L2_CrossEntropy", "submission.json")
 BATCH_SIZE = 32
 EMBEDDING_SIZE = 512
 TOP_K = 10
@@ -107,9 +107,9 @@ def retrieve():
         gallery_fnames = [os.path.basename(gallery_paths[i]) for i in I[idx]]
         results[query_fname] = gallery_fnames
 
-    with open(OUTPUT_JSON, 'w') as f:
+    with open(OUTPUT_FILE, 'w') as f:
         json.dump(results, f, indent=2)
-    print(f"Results saved to {OUTPUT_JSON}")
+    print(f"Results saved to {OUTPUT_FILE}")
 
     submit(results, "Py.tatine")
 

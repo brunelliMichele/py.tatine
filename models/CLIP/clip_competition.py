@@ -23,7 +23,7 @@ print(f"Resolved GALLERY_DIR: {GALLERY_DIR}")
 print(f"📁 Looking for training data in: {TRAIN_DIR}")
 if not os.path.exists(GALLERY_DIR):
     raise FileNotFoundError(f"❌ Directory not found: {GALLERY_DIR}")
-OUTPUT_FILE = os.path.join(BASE_DIR, "submission.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "CLIP", "RN50x64", "submission.json")
 TOP_K = 10
 
 # Load CLIP model
