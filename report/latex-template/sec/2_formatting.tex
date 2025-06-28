@@ -1,0 +1,159 @@
+\section{Models considered}
+\label{sec:formatting}
+
+All text must be in a two-column format.
+The total allowable size of the text area is $6\frac78$ inches (17.46 cm) wide by $8\frac78$ inches (22.54 cm) high.
+Columns are to be $3\frac14$ inches (8.25 cm) wide, with a $\frac{5}{16}$ inch (0.8 cm) space between them.
+The main title (on the first page) should begin 1 inch (2.54 cm) from the top edge of the page.
+The second and following pages should begin 1 inch (2.54 cm) from the top edge.
+On all pages, the bottom margin should be $1\frac{1}{8}$ inches (2.86 cm) from the bottom edge of the page for $8.5 \times 11$-inch paper;
+for A4 paper, approximately $1\frac{5}{8}$ inches (4.13 cm) from the bottom edge of the
+page.
+
+%-------------------------------------------------------------------------
+\subsection{EfficientNet}
+literature: arXiv:1905.11946 [cs.LG] EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks
+
+EfficientNet is a convolutional neural network (CNN) architecture that introduces a systematic scaling method to optimize model performance. 
+Instead of arbitrarily increasing network depth, width, or input resolution, EfficientNet uniformly scales these three dimensions using a compound scaling coefficient. 
+This approach is based on the following intuitions:
+\begin{itemize}
+\item {\bf Larger input images require greater depth} to capture long-range dependencies 
+\item {\bf Increased width} is needed to learn more detailed and fine-grained features 
+\item {\bf Higher resolution} inputs should be accompanied by proportional increases in both depth and width in order to maintain a balanced and efficient network structure
+\end{itemize}
+
+By coordinating these scaling dimensions through fixed scaling factors, EfficientNet achieves a better trade-off between accuracy and efficiency compared to traditional CNN architectures.
+For the competition, we performed feature extraction using EfficientNetB0 and EfficientNetB4 models, both pretrained on ImageNet and accessed via TensorFlow's keras.applications module. 
+To reduce the spatial dimensions of the output feature maps, we applied a Global Average Pooling (GAP) layer, which averages the value of each feature map, transforming a 3D tensor into a 1D vector of fixed length that is more suitable for similarity comparison. 
+For the retrieval task, we used Annoy (Approximate Nearest Neighbors Oh Yeah) to perform fast and memory-efficient nearest neighbor searches. Although the initial implementations used Euclidean distance, we transitioned to cosine similarity, which better suits the nature of deep image embeddings. This was implemented by L2-normalizing the extracted feature vectors before indexing them, ensuring that angular distance (as used by Annoy) corresponds to cosine distance.
+
+Annoy is particularly well-suited for this use case because:
+\begin{itemize}
+\item it supports {\bf angular distance} which is well suited for normalized embeddings 
+\item it is {\bf highly efficient and scalable}, even with high dimensional data 
+\item enables {\bf fast retrieval times} with low memory usage thanks to the tree-based structure. 
+\end{itemize}
+
+The attempt to fine-tune EfficientNet did not provide meaningful improvement in model's performance, which is why was not tested on competition day. 
+
+%-------------------------------------------------------------------------
+\subsection{ResNet}
+
+Wherever Times is specified, Times Roman may also be used.
+If neither is available on your word processor, please use the font closest in
+appearance to Times to which you have access.
+
+MAIN TITLE.
+Center the title $1\frac{3}{8}$ inches (3.49 cm) from the top edge of the first page.
+The title should be in Times 14-point, boldface type.
+Capitalize the first letter of nouns, pronouns, verbs, adjectives, and adverbs;
+do not capitalize articles, coordinate conjunctions, or prepositions (unless the title begins with such a word).
+Leave two blank lines after the title.
+
+AUTHOR NAME(s) and AFFILIATION(s) are to be centered beneath the title
+and printed in Times 12-point, non-boldface type.
+This information is to be followed by two blank lines.
+
+The ABSTRACT and MAIN TEXT are to be in a two-column format.
+
+MAIN TEXT.
+Type main text in 10-point Times, single-spaced.
+Do NOT use double-spacing.
+All paragraphs should be indented 1 pica (approx.~$\frac{1}{6}$ inch or 0.422 cm).
+Make sure your text is fully justified---that is, flush left and flush right.
+Please do not place any additional blank lines between paragraphs.
+
+Figure and table captions should be 9-point Roman type as in \cref{fig:onecol,fig:short}.
+Short captions should be centred.
+
+\noindent Callouts should be 9-point Helvetica, non-boldface type.
+Initially capitalize only the first word of section titles and first-, second-, and third-order headings.
+
+FIRST-ORDER HEADINGS.
+(For example, {\large \bf 1. Introduction}) should be Times 12-point boldface, initially capitalized, flush left, with one blank line before, and one blank line after.
+
+SECOND-ORDER HEADINGS.
+(For example, { \bf 1.1. Database elements}) should be Times 11-point boldface, initially capitalized, flush left, with one blank line before, and one after.
+If you require a third-order heading (we discourage it), use 10-point Times, boldface, initially capitalized, flush left, preceded by one blank line, followed by a period and your text on the same line.
+
+%-------------------------------------------------------------------------
+\subsection{VGG}
+
+VGG-16 is a classical convolutional architecture known for its simplicity and uniform design, consisting of sequential 3×3 convolutional layers followed by max-pooling and fully connected layers~\cite{simonyan2015very}.
+We decided to try it because of its layer-wise simplicity and consistent use of small convolutional filters make it interpretable and stable across a variety of visual tasks.
+We included VGG-16 as a diagnostic baseline to validate our retrieval pipeline and to assess how well a classical CNN performs on a modern cross-domain retrieval task.
+However, in our retrieval scenario, it exhibited several limitations. Its strong reliance on local texture patterns made it susceptible to the types of superficial variations introduced by synthetic image generation — such as lighting inconsistencies, skin smoothness artifacts, or uniform backgrounds.
+Additionally, the absence of skip connections limited its ability to integrate deep semantic context, which proved essential for cross-domain identity recognition.
+Retrieval rankings often favored images with similar lighting or pose over those with true identity matches. These results aligned with prior findings that CNNs trained on ImageNet are overly texture-biased~\cite{geirhos2019imagenet},
+
+%-------------------------------------------------------------------------
+\subsection{DINO V2}
+
+Meta's DINOv2~\cite{caron2021emerging} is a recent self-supervised vision transformer (ViT) trained using a teacher-student framework that avoids the need for manual labels. Unlike traditional supervised learning, DINO trains models to maximize consistency across different augmented views of the same image.
+This promotes the learning of features that are robust to low-level variations such as texture, lighting, and background, and encourages a focus on object-level or identity-preserving semantics.
+For those reasons it showcases an ability to generalize across different visual domains without the need for fine tuning, which made it an obvious choice, given the task.
+Specifically we used the vit_ base_patch16_224.dino model. This corresponds to a Vision Transformer (ViT-B/16) trained using the original DINO self-supervised framework~\cite{caron2021emerging}, due to its capacity to form semantically coherent representations without requiring human-labeled supervision.
+Neverthless, we obtained very low performances during the competition, probably because Dino is not trained to distinguish between identities and it lacks explicit supervision for facial or fine-grained matching tasks, as argued by Oquab et al.~\cite{oquab2023dinov2}.
+Additionally, adding a fine-tuning layer did not help; in fact, the performance decreased. Our most likely explanation for such a result is that being pre-trained with unlabeled semantic relationships, fine-tuning it on a labeled training set might distort its geometry~\cite{oquab2023dinov2}.
+
+
+%-------------------------------------------------------------------------
+\subsection{CLIP}
+
+The CLIP (Contrastive Language–Image Pretraining) framework, developed by OpenAI, was the most effective model we evaluated. CLIP is trained on hundreds of millions of image-text pairs scraped from the internet, learning to align images and natural language descriptions in a shared embedding space.
+This multimodal contrastive training equips CLIP with a robust understanding of high-level semantics, making it especially well-suited for retrieval tasks where visual similarity is more conceptual~\cite{radford2021learning}.
+We tested several variants of CLIP in frozen mode, including ViT-B/16, ViT-L/14, and RN50x64. All models were evaluated by computing cosine similarity between image embeddings. Among them, RN50x64 obtained the best performance during the competition window.
+Another factor in the choice to deploy it was that it is trained on a wide range of image-text pairs during training, CLIP generalizes well to new domains and unseen classes and it should also achieve high performances in unlabeled settings.
+As seen, CLIP models come in multiple architectural forms — most notably Vision Transformers (ViTs) and ResNet-based (RN) backbones. We chose to evaluate both because each brings different inductive biases and practical trade-offs that can influence retrieval performance depending on the task.
+While ViT based models are particularly adept at capturing long-range semantic relationships and context-aware representations~\cite{dosovitskiy2021an}, ResNet based models are often more robust to small-scale distortions, faster to train or fine-tune, and more efficient in memory-constrained environments. Their convolutional structure also tends to preserve fine-grained spatial details that are useful in identity-level retrieval~\cite{he2016deep}.
+We decided to test both because of the unknown nature of the retrieval task we would face.
+During competition, we choose to fine-tune only RN50x64 for time issues, and we choose it because we hypotized that ResNets would be more stable during fine-tuning, especially on small datasets; also RN50x64 is significantly more memory-efficient than ViT-L/14, which was key given the context.
+
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}lc@{}}
+    \toprule
+    Method & Frobnability \\
+    \midrule
+    Theirs & Frumpy \\
+    Yours & Frobbly \\
+    Ours & Makes one's heart Frob\\
+    \bottomrule
+  \end{tabular}
+  \caption{Results.   Ours is better.}
+  \label{tab:example}
+\end{table}
+
+%-------------------------------------------------------------------------
+\subsection{Illustrations, graphs, and photographs}
+
+All graphics should be centered.
+In \LaTeX, avoid using the \texttt{center} environment for this purpose, as this adds potentially unwanted whitespace.
+Instead use
+{\small\begin{verbatim}
+  \centering
+\end{verbatim}}
+at the beginning of your figure.
+Please ensure that any point you wish to make is resolvable in a printed copy of the paper.
+Resize fonts in figures to match the font in the body text, and choose line widths that render effectively in print.
+Readers (and reviewers), even of an electronic copy, may choose to print your paper in order to read it.
+You cannot insist that they do otherwise, and therefore must not assume that they can zoom in to see tiny details on a graphic.
+
+When placing figures in \LaTeX, it's almost always best to use \verb+\includegraphics+, and to specify the figure width as a multiple of the line width as in the example below
+{\small\begin{verbatim}
+   \usepackage{graphicx} ...
+   \includegraphics[width=0.8\linewidth]
+                   {myfile.pdf}
+\end{verbatim}
+}
+
+
+%-------------------------------------------------------------------------
+\subsection{Color}
+
+Please refer to the author guidelines on the \confName\ \confYear\ web page for a discussion of the use of color in your document.
+
+If you use color in your plots, please keep in mind that a significant subset of reviewers and readers may have a color vision deficiency; red-green blindness is the most frequent kind.
+Hence avoid relying only on color as the discriminative feature in plots (such as red \vs green lines), but add a second discriminative feature to ease disambiguation.
