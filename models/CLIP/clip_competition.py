@@ -108,7 +108,7 @@ with open(OUTPUT_FILE, 'w') as f:
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
-submit(results, "Py.tatine")
+# submit(results, "Py.tatine")
 
 # chiama la funzione per visualizzare le immagini
 # show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
