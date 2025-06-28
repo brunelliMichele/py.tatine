@@ -1,19 +1,22 @@
 \section{Models considered}
 \label{sec:formatting}
 
-Since we did not know what the images would include thematically, nor if said images were photos, drawings or AI generated content, we selected a broad range of image encoders.
-We considered both convolutional neural networks and transform-based models, to ensure coverage about various domains and levels of abstraction.
-The assumption was that general-purpose visual encoders pretrained on large-scale datasets might transfer effectively, regardless of the final test images.
-We began with three well-known convolutional backbones: ResNet~\cite{he2016deep}, EfficientNet~\cite{tan2019efficientnet} and VGG-16~\cite{simonyan2015very}. All were pretrained on ImageNet and used in a frozen configuration to extract global feature embeddings.
-Traditional CNNs however, even when deep and pretrained, tend to emphasize local structure and low-frequency texture patterns~\cite{geirhos2019imagenet}. This often leads to oversensitivity to style, which was the main factor that determined their poor performance in the competition.
-In contrast, transformer-based encoders, especially those trained with contrastive objectives (e.g., CLIP~\cite{radford2021learning}) or self-distillation frameworks (e.g., DINO~\cite{caron2021emerging}), have demonstrated the ability to encode more abstract, globally-consistent representations, which we tought would be more suitable for an unknown setting such as the competition.
+All text must be in a two-column format.
+The total allowable size of the text area is $6\frac78$ inches (17.46 cm) wide by $8\frac78$ inches (22.54 cm) high.
+Columns are to be $3\frac14$ inches (8.25 cm) wide, with a $\frac{5}{16}$ inch (0.8 cm) space between them.
+The main title (on the first page) should begin 1 inch (2.54 cm) from the top edge of the page.
+The second and following pages should begin 1 inch (2.54 cm) from the top edge.
+On all pages, the bottom margin should be $1\frac{1}{8}$ inches (2.86 cm) from the bottom edge of the page for $8.5 \times 11$-inch paper;
+for A4 paper, approximately $1\frac{5}{8}$ inches (4.13 cm) from the bottom edge of the
+page.
 
 %-------------------------------------------------------------------------
 \subsection{EfficientNet}
+literature: arXiv:1905.11946 [cs.LG] EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks
 
 EfficientNet is a convolutional neural network (CNN) architecture that introduces a systematic scaling method to optimize model performance. 
 Instead of arbitrarily increasing network depth, width, or input resolution, EfficientNet uniformly scales these three dimensions using a compound scaling coefficient. 
-This approach is based on the intuition that:
+This approach is based on the following intuitions:
 \begin{itemize}
 \item {\bf Larger input images require greater depth} to capture long-range dependencies 
 \item {\bf Increased width} is needed to learn more detailed and fine-grained features 
@@ -21,8 +24,18 @@ This approach is based on the intuition that:
 \end{itemize}
 
 By coordinating these scaling dimensions through fixed scaling factors, EfficientNet achieves a better trade-off between accuracy and efficiency compared to traditional CNN architectures.
+For the competition, we performed feature extraction using EfficientNetB0 and EfficientNetB4 models, both pretrained on ImageNet and accessed via TensorFlow's keras.applications module. 
+To reduce the spatial dimensions of the output feature maps, we applied a Global Average Pooling (GAP) layer, which averages the value of each feature map, transforming a 3D tensor into a 1D vector of fixed length that is more suitable for similarity comparison. 
+For the retrieval task, we used Annoy (Approximate Nearest Neighbors Oh Yeah) to perform fast and memory-efficient nearest neighbor searches. Although the initial implementations used Euclidean distance, we transitioned to cosine similarity, which better suits the nature of deep image embeddings. This was implemented by L2-normalizing the extracted feature vectors before indexing them, ensuring that angular distance (as used by Annoy) corresponds to cosine distance.
 
+Annoy is particularly well-suited for this use case because:
+\begin{itemize}
+\item it supports {\bf angular distance} which is well suited for normalized embeddings 
+\item it is {\bf highly efficient and scalable}, even with high dimensional data 
+\item enables {\bf fast retrieval times} with low memory usage thanks to the tree-based structure. 
+\end{itemize}
 
+The attempt to fine-tune EfficientNet did not provide meaningful improvement in model's performance, which is why was not tested on competition day. 
 
 %-------------------------------------------------------------------------
 \subsection{ResNet}
