@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.6.24)  28 JUN 2025 13:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.6.24)  28 JUN 2025 13:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -429,8 +429,8 @@ File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 sec/2_formatting.tex:50: Missing $ inserted.
 <inserted text> 
                 $
-l.50 ...lutional layers remained frozen (requires_
-                                                  grad=False) while only the...
+l.50 ...utional layers remained frozen (requires _
+                                                   grad=False) while only th...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -620,7 +620,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  90i,9n,93p,592b,633s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/anna2/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (4 pages, 150693 bytes).
+Output written on main.pdf (4 pages, 150690 bytes).
 PDF statistics:
  107 PDF objects out of 1000 (max. 8388607)
  27 named destinations out of 1000 (max. 500000)

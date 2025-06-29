@@ -47,7 +47,7 @@ The network's final fully connected layer was replaced with an identity mapping,
 L2-normalized feature vectors were compared using cosine distance to find the 10 most similar images to the query. 
 The second methodology employed ResNet18 architecture with full network fine-tuning using cross-entropy loss for multi-class classification on the target domain. Following training convergence, the classification head was removed, and 512-dimensional feature vectors were extracted from the penultimate layer.
 Similarity search was implemented using Facebook's FAISS (Facebook AI Similarity Search) library with L2 (Euclidean) distance indexing.
-The third strategy implemented selective fine-tuning of ResNet50, where all convolutional layers remained frozen (requires_grad=False) while only the final classification layer underwent parameter updates. 
+The third strategy implemented selective fine-tuning of ResNet50, where all convolutional layers remained frozen (requires _ grad=False) while only the final classification layer underwent parameter updates. 
 This conservative transfer learning approach preserves the robust feature representations learned from ImageNet while adapting the decision boundary to the target classification task.
 After training, the model was suited for feature extraction (by removing the trained classification layer), leading to 2048-dimensional normalized vectors used for similarity computations using cosine distance. 
 
