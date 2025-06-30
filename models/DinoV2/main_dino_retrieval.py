@@ -52,6 +52,26 @@ def extract_cls(model, images):
     out = model.forward_features(images)
     return out[:, 0]
 
+# --- Visualizzazione risultati ---
+def show_retrieval_results(query_dir, gallery_dir, results):
+    for query_fname, gallery_list in results.items():
+        query_img = Image.open(os.path.join(query_dir, query_fname)).convert("RGB")
+        gallery_imgs = [Image.open(os.path.join(gallery_dir, fname)).convert("RGB") for fname in gallery_list]
+
+        fig, axes = plt.subplots(1, len(gallery_imgs) + 1, figsize=(15, 5))
+        axes[0].imshow(query_img)
+        axes[0].set_title("Query")
+        axes[0].axis('off')
+
+        for i, img in enumerate(gallery_imgs):
+            axes[i + 1].imshow(img)
+            axes[i + 1].set_title(f"Top {i+1}")
+            axes[i + 1].axis('off')
+
+        plt.tight_layout()
+        plt.show()
+
+
 print("📥 Caricamento immagini gallery...")
 gallery_images, gallery_filenames = load_images_from_folder(GALLERY_DIR)
 print(f"✅ Gallery: {len(gallery_images)} immagini")
@@ -82,27 +102,8 @@ print("💾 Salvataggio file JSON...")
 with open(OUTPUT_FILE, 'w') as f:
     json.dump(results, f, indent=2)
 
-submit(results, "Py.tatine")
-
+# submit(results, "Py.tatine")
+# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
-# --- Visualizzazione risultati ---
-def show_retrieval_results(query_dir, gallery_dir, results):
-    for query_fname, gallery_list in results.items():
-        query_img = Image.open(os.path.join(query_dir, query_fname)).convert("RGB")
-        gallery_imgs = [Image.open(os.path.join(gallery_dir, fname)).convert("RGB") for fname in gallery_list]
 
-        fig, axes = plt.subplots(1, len(gallery_imgs) + 1, figsize=(15, 5))
-        axes[0].imshow(query_img)
-        axes[0].set_title("Query")
-        axes[0].axis('off')
-
-        for i, img in enumerate(gallery_imgs):
-            axes[i + 1].imshow(img)
-            axes[i + 1].set_title(f"Top {i+1}")
-            axes[i + 1].axis('off')
-
-        plt.tight_layout()
-        plt.show()
-
-# show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)

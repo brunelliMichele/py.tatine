@@ -108,6 +108,7 @@ with open(OUTPUT_FILE, 'w') as f:
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
+
 # submit(results, "Py.tatine")
 
 # chiama la funzione per visualizzare le immagini
