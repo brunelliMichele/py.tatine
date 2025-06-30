@@ -101,7 +101,7 @@ def build_filename_to_class_mapping(dataset_dir):
         for f in files:
             if f.lower().endswith((".jpg", ".jpeg", ".png")):
                 class_name = os.path.basename(root)
-                mapping[f] = class_name
+                mapping[os.path.basename(f)] = class_name
     return mapping
 
 def top_k_accuracy(res, filename_to_class, k=10):
