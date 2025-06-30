@@ -1,5 +1,7 @@
 import os
 import sys
+import random
+import glob
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
 import json
@@ -86,9 +88,13 @@ print(f"✅ {len(gallery_images)} immagini caricate nella gallery")
 print("🔄 Estrazione feature gallery...")
 gallery_features = extract_clip_features(model, gallery_images)
 
-print("🔄 Caricamento immagini query...")
-query_images, query_filenames = load_images_from_folder(QUERY_DIR)
-print(f"✅ {len(query_images)} immagini query caricate")
+
+print("🔄 Selezione casuale di 20 immagini query dal training set...")
+all_training_images = glob.glob(os.path.join(TRAIN_DIR, "*", "*.jpg"))
+selected_query_paths = random.sample(all_training_images, 20)
+query_filenames = [os.path.basename(p) for p in selected_query_paths]
+query_images = [preprocess(Image.open(p).convert("RGB")) for p in selected_query_paths]
+print(f"✅ {len(query_images)} immagini query selezionate")
 
 print("🔄 Estrazione feature query e retrieval...")
 results = {}
