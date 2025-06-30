@@ -144,3 +144,5 @@ filename_mapping = build_filename_to_class_mapping(dataset_dir)
 
 acc= top_k_accuracy(results, filename_mapping)
 prec= precision_at_k(results, filename_mapping)
+print("Accuracy=", acc)
+print("Precision=", prec)
