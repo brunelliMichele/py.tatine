@@ -1,16 +1,18 @@
 import os
 import sys
-# In alto, sotto import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
-from submit import submit
+import random
 import json
 import cv2
 import numpy as np
 import tensorflow as tf
 from annoy import AnnoyIndex
 
-# --- Load EfficientNetB4 (pretrained, no top) ---
+# --- Paths and Setup ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+#from submit import submit
+
+# --- EfficientNetB4 Model ---
 efficientnet_model = tf.keras.applications.EfficientNetB4(
     include_top=False, weights='imagenet', input_shape=(224, 224, 3)
 )
@@ -19,7 +21,6 @@ model = tf.keras.Sequential([
     tf.keras.layers.GlobalAveragePooling2D(),
 ])
 
-# --- Feature extraction with L2 normalization ---
 def extract_features(image_path):
     img = tf.keras.preprocessing.image.load_img(image_path, target_size=(224, 224))
     img = tf.keras.preprocessing.image.img_to_array(img)
@@ -29,82 +30,119 @@ def extract_features(image_path):
     features /= np.linalg.norm(features, axis=-1, keepdims=True)
     return features.flatten()
 
-# --- Load and prepare images with OpenCV ---
-def load_and_prepare_image(path, size=(224, 224)):
-    img = cv2.imread(path)
-    if img is None:
-        raise ValueError(f"Failed to load image: {path}")
-    img = cv2.resize(img, size)
-    if len(img.shape) == 2 or img.shape[2] == 1:
-        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-    return img
+# --- Parameters ---
+INPUT_FOLDER = os.path.join(BASE_DIR, "..", "..", "data_preEval", "training")  # Replace with your folder path
+TOP_N = 10
+NUM_QUERIES = 20
 
-# --- Create image strip for visualization ---
-def create_image_strip(query_path, similar_paths, size=(224, 224)):
-    query_img = load_and_prepare_image(query_path, size)
-    query_img = cv2.rectangle(query_img.copy(), (0, 0), (query_img.shape[1]-1, query_img.shape[0]-1), (0, 0, 255), 5)
-    images = [query_img] + [load_and_prepare_image(p, size) for p in similar_paths]
-    return np.concatenate(images, axis=1)
-
-# --- Set up directories ---
-script_dir = os.path.dirname(os.path.abspath(__file__))
-QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "query")
-GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "gallery")
-TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data", "training"))
-top_n = 10
-
-# --- Extract gallery features ---
-print("Extracting gallery features...")
-print(f"📁 Looking for images in: {GALLERY_DIR}")
-gallery_images = [
+# --- Collect all images ---
+print(f"📁 Collecting images from: {INPUT_FOLDER}")
+all_images = [
     os.path.join(root, file)
-    for root, _, files in os.walk(GALLERY_DIR)
+    for root, _, files in os.walk(INPUT_FOLDER)
     for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))
 ]
-if not gallery_images:
-    raise ValueError(f"❌ Nessuna immagine trovata nella gallery: {GALLERY_DIR}")
-gallery_features = [extract_features(p) for p in gallery_images]
+if len(all_images) < NUM_QUERIES:
+    raise ValueError(f"❌ Not enough images in the folder to sample {NUM_QUERIES} queries.")
 
-# --- Build Annoy index ---
-feature_dim = len(gallery_features[0])
+# --- Randomly sample 20 queries ---
+query_images = random.sample(all_images, NUM_QUERIES)
+query_set = set(query_images)
+
+# --- Extract features for all images ---
+print("🔍 Extracting features for all images...")
+features = [extract_features(p) for p in all_images]
+feature_dim = len(features[0])
+
+# --- Build Annoy Index ---
 annoy_index = AnnoyIndex(feature_dim, 'angular')
-for i, feat in enumerate(gallery_features):
-    annoy_index.add_item(i, feat)
+for i, vec in enumerate(features):
+    annoy_index.add_item(i, vec)
 annoy_index.build(200)
-print("Annoy index built.")
+print("✅ Annoy index built.")
 
-# --- Process queries ---
-query_images = [
-    os.path.join(root, file)
-    for root, _, files in os.walk(QUERY_DIR)
-    for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))
-]
-
+# --- Perform retrieval ---
 results = {}
-
 for i, query_path in enumerate(query_images):
-    print(f"\nProcessing query {i+1}/{len(query_images)}: {os.path.basename(query_path)}")
+    print(f"\n🔎 Processing query {i+1}/{len(query_images)}: {os.path.basename(query_path)}")
     query_feature = extract_features(query_path)
-    similar_idxs = annoy_index.get_nns_by_vector(query_feature, top_n)
-    similar_paths = [gallery_images[idx] for idx in similar_idxs]
+    idxs = annoy_index.get_nns_by_vector(query_feature, TOP_N + 1)  # +1 to exclude self
+    query_idx = all_images.index(query_path)
+    
+    # Filter out the query image from the results
+    filtered_idxs = [idx for idx in idxs if idx != query_idx][:TOP_N]
+    similar_paths = [all_images[idx] for idx in filtered_idxs]
 
-    # # Show image strip
-    # strip_img = create_image_strip(query_path, similar_paths)
-    # cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
-    # cv2.waitKey(2000)
-
-    # Save result
     query_fname = os.path.basename(query_path).replace("\\", "/")
     gallery_fnames = [os.path.basename(p).replace("\\", "/") for p in similar_paths]
     results[query_fname] = gallery_fnames
 
-cv2.destroyAllWindows()
-
-# --- Save JSON results ---
-script_dir = os.path.dirname(os.path.abspath(__file__))
-OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "EfficientNet", "merged", "submission.json")
+# --- Save Results ---
+OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "EfficientNet", "B4", "custom_submission.json")
+os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 with open(OUTPUT_FILE, "w") as f:
     json.dump(results, f, indent=2)
 
-print(f"\nRetrieval complete. Results saved to '{OUTPUT_FILE}'.")
-submit(results, "Py.tatine")
+print(f"\n✅ Retrieval complete. Results saved to '{OUTPUT_FILE}'.")
+#submit(results, "Py.tatine")
+
+dataset_dir = os.path.join(BASE_DIR, "..", "data_preEval", "training")
+
+def build_filename_to_class_mapping(dataset_dir):
+    """
+    Costruisce una mappa: nome_file.jpg → nome_classe (cartella)
+    Scorre tutte le sottocartelle e associa il nome del file alla sua classe.
+    """
+    mapping = {}
+    for root, _, files in os.walk(dataset_dir):
+        for f in files:
+            if f.lower().endswith((".jpg", ".jpeg", ".png")):
+                class_name = os.path.basename(root)
+                mapping[f] = class_name
+    return mapping
+
+def top_k_accuracy(res, filename_to_class, k=10):
+    """
+    Top-k accuracy: almeno 1 immagine rilevata ha la stessa classe della query.
+    """
+    correct = 0
+    total = 0
+    for qfile, retrieved_files in res.items():
+        q_class = filename_to_class.get(qfile)
+        if q_class is None:
+            continue  # file non trovato nella mappa
+        retrieved_classes = [filename_to_class.get(f) for f in retrieved_files[:k]]
+        if q_class in retrieved_classes:
+            correct += 1
+        total += 1
+    acc = correct / total if total > 0 else 0.0
+    print(f"[METRIC] Top-{k} Accuracy: {acc:.4f}")
+    return acc
+
+def precision_at_k(res, filename_to_class, k=10):
+    """
+    Precision@k: media delle proporzioni di immagini rilevate che hanno la stessa classe della query.
+    """
+    total_precision = 0
+    total_queries = 0
+    for qfile, retrieved_files in res.items():
+        q_class = filename_to_class.get(qfile)
+        if q_class is None:
+            continue
+        retrieved_classes = [filename_to_class.get(f) for f in retrieved_files[:k]]
+        correct = sum(1 for c in retrieved_classes if c == q_class)
+        total_precision += correct / k
+        total_queries += 1
+    avg_precision = total_precision / total_queries if total_queries > 0 else 0.0
+    print(f"[METRIC] Precision@{k}: {avg_precision:.4f}")
+    return avg_precision
+
+
+filename_mapping = build_filename_to_class_mapping(dataset_dir)
+
+acc= top_k_accuracy(results, filename_mapping)
+prec= precision_at_k(results, filename_mapping)
+
+
+print("Accuracy=", acc)
+print("Precision=", prec)
