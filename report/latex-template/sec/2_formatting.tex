@@ -1,14 +1,21 @@
 \section{Models considered}
 \label{sec:formatting}
 
-All text must be in a two-column format.
-The total allowable size of the text area is $6\frac78$ inches (17.46 cm) wide by $8\frac78$ inches (22.54 cm) high.
-Columns are to be $3\frac14$ inches (8.25 cm) wide, with a $\frac{5}{16}$ inch (0.8 cm) space between them.
-The main title (on the first page) should begin 1 inch (2.54 cm) from the top edge of the page.
-The second and following pages should begin 1 inch (2.54 cm) from the top edge.
-On all pages, the bottom margin should be $1\frac{1}{8}$ inches (2.86 cm) from the bottom edge of the page for $8.5 \times 11$-inch paper;
-for A4 paper, approximately $1\frac{5}{8}$ inches (4.13 cm) from the bottom edge of the
-page.
+
+In this section, we present the set of machine learning models explored for the image retrieval competition. Given the lack of prior knowledge about the test distribution and the type of images used for the task, we adopted a diversified modeling strategy that spanned across both classical convolutional neural networks and more recent transformer-based architectures.
+
+Each model was evaluated in terms of its ability to generate discriminative image embeddings suitable for content-based retrieval. To this end, we experimented with different levels of supervision, transfer learning paradigms (from fixed feature extraction to full and partial fine-tuning), and similarity metrics.
+
+The following architectures were considered:
+\begin{itemize}
+  \item \textbf{EfficientNet}: chosen for its balance between efficiency and accuracy, tested in frozen mode as a feature extractor.
+  \item \textbf{ResNet}: used under three distinct settings — fixed features, full fine-tuning, and selective fine-tuning — to assess how different training strategies affect retrieval quality.
+  \item \textbf{VGG-16}: included as a classical baseline to benchmark against more modern architectures and to validate the stability of the retrieval pipeline.
+  \item \textbf{DINOv2}: tested as a self-supervised transformer model, capable of producing general-purpose visual embeddings without explicit fine-tuning.
+  \item \textbf{CLIP}: the most competitive model in our experiments, evaluated across multiple variants and chosen for fine-tuning based on a trade-off between semantic generalization and computational efficiency.
+\end{itemize}
+
+For all architectures, we extracted image representations which were L2-normalized and indexed using different methods, depending on the model and setup. Cosine similarity was the default metric for comparing embeddings, unless stated otherwise. In the following sections, we describe the specific implementation details and retrieval performance considerations for each model family.
 
 %-------------------------------------------------------------------------
 \subsection{EfficientNet}
@@ -47,7 +54,7 @@ The network's final fully connected layer was replaced with an identity mapping,
 L2-normalized feature vectors were compared using cosine distance to find the 10 most similar images to the query. 
 The second methodology employed ResNet18 architecture with full network fine-tuning using cross-entropy loss for multi-class classification on the target domain. Following training convergence, the classification head was removed, and 512-dimensional feature vectors were extracted from the penultimate layer.
 Similarity search was implemented using Facebook's FAISS (Facebook AI Similarity Search) library with L2 (Euclidean) distance indexing.
-The third strategy implemented selective fine-tuning of ResNet50, where all convolutional layers remained frozen (requires_grad=False) while only the final classification layer underwent parameter updates. 
+The third strategy implemented selective fine-tuning of ResNet50, where all convolutional layers remained frozen (requires\_grad=False) while only the final classification layer underwent parameter updates. 
 This conservative transfer learning approach preserves the robust feature representations learned from ImageNet while adapting the decision boundary to the target classification task.
 After training, the model was suited for feature extraction (by removing the trained classification layer), leading to 2048-dimensional normalized vectors used for similarity computations using cosine distance. 
 
@@ -67,7 +74,7 @@ Retrieval rankings often favored images with similar lighting or pose over those
 Meta's DINOv2~\cite{caron2021emerging} is a recent self-supervised vision transformer (ViT) trained using a teacher-student framework that avoids the need for manual labels. Unlike traditional supervised learning, DINO trains models to maximize consistency across different augmented views of the same image.
 This promotes the learning of features that are robust to low-level variations such as texture, lighting, and background, and encourages a focus on object-level or identity-preserving semantics.
 For those reasons it showcases an ability to generalize across different visual domains without the need for fine tuning, which made it an obvious choice, given the task.
-Specifically we used the vit_base_patch16_224.dino model. This corresponds to a Vision Transformer (ViT-B/16) trained using the original DINO self-supervised framework~\cite{caron2021emerging}, due to its capacity to form semantically coherent representations without requiring human-labeled supervision.
+Specifically we used the vit\_base\_patch16\_224.dino model. This corresponds to a Vision Transformer (ViT-B/16) trained using the original DINO self-supervised framework~\cite{caron2021emerging}, due to its capacity to form semantically coherent representations without requiring human-labeled supervision.
 Neverthless, we obtained very low performances during the competition, probably because Dino is not trained to distinguish between identities and it lacks explicit supervision for facial or fine-grained matching tasks, as argued by Oquab et al.~\cite{oquab2023dinov2}.
 Additionally, adding a fine-tuning layer did not help; in fact, the performance decreased. Our most likely explanation for such a result is that being pre-trained with unlabeled semantic relationships, fine-tuning it on a labeled training set might distort its geometry~\cite{oquab2023dinov2}.
 
