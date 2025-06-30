@@ -3,7 +3,6 @@ import sys
 # In alto, sotto import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
-
 import json
 import torch
 import clip
@@ -13,11 +12,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize
 from submit import submit
+from metrics import build_filename_to_class_mapping, precision_at_k
 
 # Paths
-QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "query")
-GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "gallery")
-TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data", "training"))
+QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "test", "query")
+GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "test", "gallery")
+TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data_preEval", "training"))
 
 print(f"Resolved QUERY_DIR: {QUERY_DIR}")
 print(f"Resolved GALLERY_DIR: {GALLERY_DIR}")
@@ -161,7 +161,12 @@ with open(OUTPUT_FILE, 'w') as f:
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
-submit(results, "Py.tatine")
+file_name_mapping = build_filename_to_class_mapping(TRAIN_DIR)
+accuracy = precision_at_k(results, file_name_mapping, 10)
+
+print(accuracy)
+
+# submit(results, "Py.tatine")
 
 # chiama la funzione per visualizzare le immagini
 # show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)

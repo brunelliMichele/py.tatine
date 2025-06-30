@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import torchvision.models as models
 import torchvision.transforms as T
 from tensorflow.keras.models import load_model
+from metrics import build_filename_to_class_mapping, precision_at_k
 
 # Controlla se esiste il modello fine-tuned
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -24,9 +25,9 @@ if not os.path.exists(FINETUNED_MODEL_PATH):
 
 
 # Percorsi
-QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "query")
-GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "gallery")
-TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data", "training"))
+QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "test", "query")
+GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "test", "gallery")
+TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data_preEval", "training"))
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "VGG16", "submission.json")
 TOP_K = 10
 
@@ -72,6 +73,25 @@ def load_images_from_folder(folder):
                 print(f"Errore con {fname}: {e}")
     return images, filenames
 
+# --- Visualizzazione risultati ---
+def show_retrieval_results(query_dir, gallery_dir, results):
+    for item in results:
+        query_img = Image.open(os.path.join(query_dir, item['filename'])).convert("RGB")
+        gallery_imgs = [Image.open(os.path.join(gallery_dir, fname)).convert("RGB") for fname in item['samples']]
+
+        fig, axes = plt.subplots(1, len(gallery_imgs) + 1, figsize=(15, 5))
+        axes[0].imshow(query_img)
+        axes[0].set_title("Query")
+        axes[0].axis('off')
+
+        for i, img in enumerate(gallery_imgs):
+            axes[i + 1].imshow(img)
+            axes[i + 1].set_title(f"Top {i+1}")
+            axes[i + 1].axis('off')
+
+        plt.tight_layout()
+        plt.show()
+
 print("📥 Caricamento immagini gallery...")
 gallery_images, gallery_filenames = load_images_from_folder(GALLERY_DIR)
 print(f"✅ Gallery: {len(gallery_images)} immagini")
@@ -99,25 +119,11 @@ with open(OUTPUT_FILE, 'w') as f:
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
-submit(results, "Py.tatine")
+file_name_mapping = build_filename_to_class_mapping(TRAIN_DIR)
+accuracy = precision_at_k(results, file_name_mapping, 10)
 
-# --- Visualizzazione risultati ---
-def show_retrieval_results(query_dir, gallery_dir, results):
-    for item in results:
-        query_img = Image.open(os.path.join(query_dir, item['filename'])).convert("RGB")
-        gallery_imgs = [Image.open(os.path.join(gallery_dir, fname)).convert("RGB") for fname in item['samples']]
+print(accuracy)
 
-        fig, axes = plt.subplots(1, len(gallery_imgs) + 1, figsize=(15, 5))
-        axes[0].imshow(query_img)
-        axes[0].set_title("Query")
-        axes[0].axis('off')
-
-        for i, img in enumerate(gallery_imgs):
-            axes[i + 1].imshow(img)
-            axes[i + 1].set_title(f"Top {i+1}")
-            axes[i + 1].axis('off')
-
-        plt.tight_layout()
-        plt.show()
+# submit(results, "Py.tatine")
 
 # show_retrieval_results(QUERY_DIR, GALLERY_DIR, results)
