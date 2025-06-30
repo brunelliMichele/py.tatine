@@ -28,7 +28,7 @@ def extract_features(image_path):
     return features.flatten()
 
 # --- New: Provide the single folder with all images ---
-IMAGE_DIR = "data_preEval/training"
+IMAGE_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "training")
 
 print(f"📁 Looking for images in: {IMAGE_DIR}")
 
@@ -141,7 +141,13 @@ def precision_at_k(res, filename_to_class, k=10):
     return avg_precision
 
 filename_mapping = build_filename_to_class_mapping(dataset_dir)
-
+print("🔎 Classes found in mapping:", set(filename_mapping.values()))
+print("🗂 Example mapping keys:", list(filename_mapping.keys())[:5])
+print("📄 Example result keys:", list(results.keys())[:5])
+for query, retrieved in list(results.items())[:1]:
+    print("Query:", query, "| Class:", filename_mapping.get(query))
+    print("Retrieved:", retrieved)
+    print("Retrieved classes:", [filename_mapping.get(r) for r in retrieved])
 acc= top_k_accuracy(results, filename_mapping)
 prec= precision_at_k(results, filename_mapping)
 print("Accuracy=", acc)
