@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: ieeenat_fullname.bst
+Database file #1: main.bib
+Repeated entry---line 127 of file main.bib
+ : @inproceedings{he2016deep
+ :                          ,
+I'm skipping whatever remains of this entry
+You've used 7 entries,
+            2708 wiz_defined-function locations,
+            694 strings with 7324 characters,
+and the built_in function-call counts, 5023 in all, are:
+= -- 386
+> -- 496
+< -- 3
++ -- 166
+- -- 159
+* -- 453
+:= -- 802
+add.period$ -- 21
+call.type$ -- 7
+change.case$ -- 72
+chr.to.int$ -- 7
+cite$ -- 14
+duplicate$ -- 177
+empty$ -- 287
+format.name$ -- 168
+if$ -- 1019
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 7
+newline$ -- 43
+num.names$ -- 28
+pop$ -- 160
+preamble$ -- 1
+purify$ -- 65
+quote$ -- 0
+skip$ -- 162
+stack$ -- 0
+substring$ -- 86
+swap$ -- 33
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 77
+warning$ -- 0
+while$ -- 27
+width$ -- 0
+write$ -- 93
+(There was 1 error message)
