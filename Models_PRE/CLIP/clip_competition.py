@@ -90,7 +90,7 @@ gallery_features = extract_clip_features(model, gallery_images)
 
 
 print("🔄 Selezione casuale di 20 immagini query dal training set...")
-all_training_images = glob.glob(os.path.join(TRAIN_DIR, "*", "*.jpg"))
+all_training_images = glob.glob(os.path.join(TRAIN_DIR, "*", "*.jpeg"))
 selected_query_paths = random.sample(all_training_images, 20)
 query_filenames = [os.path.basename(p) for p in selected_query_paths]
 query_images = [preprocess(Image.open(p).convert("RGB")) for p in selected_query_paths]
