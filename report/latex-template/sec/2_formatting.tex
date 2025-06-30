@@ -47,7 +47,7 @@ The network's final fully connected layer was replaced with an identity mapping,
 L2-normalized feature vectors were compared using cosine distance to find the 10 most similar images to the query. 
 The second methodology employed ResNet18 architecture with full network fine-tuning using cross-entropy loss for multi-class classification on the target domain. Following training convergence, the classification head was removed, and 512-dimensional feature vectors were extracted from the penultimate layer.
 Similarity search was implemented using Facebook's FAISS (Facebook AI Similarity Search) library with L2 (Euclidean) distance indexing.
-The third strategy implemented selective fine-tuning of ResNet50, where all convolutional layers remained frozen (requires _ grad=False) while only the final classification layer underwent parameter updates. 
+The third strategy implemented selective fine-tuning of ResNet50, where all convolutional layers remained frozen (requires_grad=False) while only the final classification layer underwent parameter updates. 
 This conservative transfer learning approach preserves the robust feature representations learned from ImageNet while adapting the decision boundary to the target classification task.
 After training, the model was suited for feature extraction (by removing the trained classification layer), leading to 2048-dimensional normalized vectors used for similarity computations using cosine distance. 
 
@@ -100,34 +100,3 @@ During competition, we choose to fine-tune only RN50x64 for time issues, and we 
   \label{tab:example}
 \end{table}
 
-%-------------------------------------------------------------------------
-\subsection{Illustrations, graphs, and photographs}
-
-All graphics should be centered.
-In \LaTeX, avoid using the \texttt{center} environment for this purpose, as this adds potentially unwanted whitespace.
-Instead use
-{\small\begin{verbatim}
-  \centering
-\end{verbatim}}
-at the beginning of your figure.
-Please ensure that any point you wish to make is resolvable in a printed copy of the paper.
-Resize fonts in figures to match the font in the body text, and choose line widths that render effectively in print.
-Readers (and reviewers), even of an electronic copy, may choose to print your paper in order to read it.
-You cannot insist that they do otherwise, and therefore must not assume that they can zoom in to see tiny details on a graphic.
-
-When placing figures in \LaTeX, it's almost always best to use \verb+\includegraphics+, and to specify the figure width as a multiple of the line width as in the example below
-{\small\begin{verbatim}
-   \usepackage{graphicx} ...
-   \includegraphics[width=0.8\linewidth]
-                   {myfile.pdf}
-\end{verbatim}
-}
-
-
-%-------------------------------------------------------------------------
-\subsection{Color}
-
-Please refer to the author guidelines on the \confName\ \confYear\ web page for a discussion of the use of color in your document.
-
-If you use color in your plots, please keep in mind that a significant subset of reviewers and readers may have a color vision deficiency; red-green blindness is the most frequent kind.
-Hence avoid relying only on color as the discriminative feature in plots (such as red \vs green lines), but add a second discriminative feature to ease disambiguation.
