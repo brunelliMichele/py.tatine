@@ -37,15 +37,19 @@ model.eval().to(device)
 
 def load_images_from_flat_folder(folder):
     images, filenames = [], []
-    for fname in sorted(os.listdir(folder)):
-        path = os.path.join(folder, fname)
-        if os.path.isfile(path) and fname.lower().endswith(('.jpg', '.jpeg', '.png')):
-            try:
-                img = transform(Image.open(path).convert("RGB"))
-                images.append(img)
-                filenames.append(fname)
-            except Exception as e:
-                print(f"Errore con {fname}: {e}")
+    for root, _, files in os.walk(folder):  # 👈 now scans subfolders
+        for fname in sorted(files):
+            if fname.lower().endswith(('.jpg', '.jpeg', '.png')):
+                path = os.path.join(root, fname)
+                try:
+                    img = transform(Image.open(path).convert("RGB"))
+                    images.append(img)
+                    filenames.append(os.path.basename(fname))  # just filename
+                except Exception as e:
+                    print(f"❌ Error loading {fname}: {e}")
+    print(f"✅ Loaded {len(images)} images.")
+    if not images:
+        raise RuntimeError("❌ No images found — check path and format.")
     return torch.stack(images).to(device), filenames
 
 def extract_features(model, images, batch_size=16):
