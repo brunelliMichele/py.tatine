@@ -10,7 +10,9 @@ import json
 
 # --- Setup paths ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..", "..")))
+METRICS_PATH = os.path.abspath(os.path.join(BASE_DIR, ".."))
+sys.path.insert(0, METRICS_PATH)
+#sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..", "..")))
 #from submit import submit
 
 from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
