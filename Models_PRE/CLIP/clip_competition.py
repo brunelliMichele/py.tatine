@@ -26,7 +26,24 @@ print(f"📁 Looking for training data in: {TRAIN_DIR}")
 if not os.path.exists(GALLERY_DIR):
     raise FileNotFoundError(f"❌ Directory not found: {GALLERY_DIR}")
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "CLIP", "RN50x64", "submission.json")
+
 TOP_K = 10
+
+# Utility to sample random queries from training
+def sample_random_queries_from_training(training_dir, num_queries=20, preprocess_fn=None):
+    all_images = []
+    for root, _, files in os.walk(training_dir):
+        for file in files:
+            if file.lower().endswith((".jpg", ".jpeg", ".png")):
+                all_images.append(os.path.join(root, file))
+
+    if len(all_images) < num_queries:
+        raise ValueError(f"Not enough images in {training_dir} to sample {num_queries} queries. Found {len(all_images)}.")
+
+    selected_paths = random.sample(all_images, num_queries)
+    selected_filenames = [os.path.basename(p) for p in selected_paths]
+    images = [preprocess_fn(Image.open(p).convert("RGB")) for p in selected_paths] if preprocess_fn else selected_paths
+    return images, selected_filenames, selected_paths
 
 # Load CLIP model
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -90,17 +107,7 @@ gallery_features = extract_clip_features(model, gallery_images)
 
 
 print("🔄 Selezione casuale di 20 immagini query dal training set...")
-all_training_images = []
-for root, _, files in os.walk(TRAIN_DIR):
-    for file in files:
-        if file.lower().endswith((".jpg", ".jpeg", ".png")):
-            all_training_images.append(os.path.join(root, file))
-
-if len(all_training_images) < 20:
-    raise ValueError(f"Not enough training images to sample 20. Found only {len(all_training_images)}.")
-selected_query_paths = random.sample(all_training_images, 20)
-query_filenames = [os.path.basename(p) for p in selected_query_paths]
-query_images = [preprocess(Image.open(p).convert("RGB")) for p in selected_query_paths]
+query_images, query_filenames, query_paths = sample_random_queries_from_training(TRAIN_DIR, 20, preprocess)
 print(f"✅ {len(query_images)} immagini query selezionate")
 
 print("🔄 Estrazione feature query e retrieval...")
