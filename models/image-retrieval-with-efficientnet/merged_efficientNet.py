@@ -98,7 +98,7 @@ for i, query_path in enumerate(query_images):
     gallery_fnames = [os.path.basename(p).replace("\\", "/") for p in similar_paths]
     results[query_fname] = gallery_fnames
 
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
 
 # --- Save JSON results ---
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -107,4 +107,4 @@ with open(OUTPUT_FILE, "w") as f:
     json.dump(results, f, indent=2)
 
 print(f"\nRetrieval complete. Results saved to '{OUTPUT_FILE}'.")
-submit(results, "Py.tatine")
+# submit(results, "Py.tatine")
