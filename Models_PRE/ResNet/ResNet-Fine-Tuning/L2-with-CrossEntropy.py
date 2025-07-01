@@ -23,7 +23,9 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 # Configurazione base
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-DATASET_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "..", "data_preEval", "training"))
+DATASET_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "data_preEval", "training"))
+print("🔍 Looking for training data in:", DATASET_DIR)
+print("📂 Exists?", os.path.isdir(DATASET_DIR))
 QUERY_DIR = DATASET_DIR
 GALLERY_DIR = DATASET_DIR
 TRAIN_DIR = DATASET_DIR
