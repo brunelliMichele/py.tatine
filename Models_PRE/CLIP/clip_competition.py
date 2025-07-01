@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize
 from submit import submit
-from metrics import build_filename_to_class_mapping, precision_at_k
+from metrics import build_filename_to_class_mapping, precision_at_k, top_k_accuracy
 
 # Paths
 QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "test", "query")
@@ -150,9 +150,11 @@ with open(OUTPUT_FILE, 'w') as f:
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
 file_name_mapping = build_filename_to_class_mapping(TRAIN_DIR)
-accuracy = precision_at_k(results, file_name_mapping, 10)
+precision = precision_at_k(results, file_name_mapping, 10)
+accuracy = top_k_accuracy(results, file_name_mapping, 10)
 
 print(accuracy)
+print(precision)
 
 # submit(results, "Py.tatine")
 

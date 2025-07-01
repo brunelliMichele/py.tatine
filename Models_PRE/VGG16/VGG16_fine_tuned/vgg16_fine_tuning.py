@@ -10,9 +10,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
 
 # Percorso dei dati
-QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data", "test", "query")
-GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data", "test", "gallery")
-TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "data", "training"))
+QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data_preEval", "test", "query")
+GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data_preEval", "test", "gallery")
+TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "data_preEval", "training"))
 
 print(f"📁 Verifica cartella di training: {TRAIN_DIR}")
 # Parametri
