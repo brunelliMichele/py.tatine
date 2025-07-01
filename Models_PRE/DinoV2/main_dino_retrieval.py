@@ -11,7 +11,7 @@ from metrics import build_filename_to_class_mapping, precision_at_k, top_k_accur
 
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+sys.path.insert(0, os.path.abspath(os.path.join(BASE_DIR, "..")))
 
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "training")
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "DINO", "submission.json")
@@ -90,9 +90,17 @@ print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 #submit(results, "Py.tatine")
 
 
-dataset_dir = os.path.join(BASE_DIR, "..", "data_preEval", "training")
+dataset_dir = GALLERY_DIR
 
 filename_mapping = build_filename_to_class_mapping(dataset_dir)
+print("🔎 Classes found:", set(filename_mapping.values()))
+print("🗂 Mapping keys:", list(filename_mapping.keys())[:5])
+print("📄 Query filenames:", [r['filename'] for r in results[:5]])
+q = results[0]
+print("Query:", q["filename"], "| Class:", filename_mapping.get(q["filename"]))
+print("Retrieved:", q["samples"])
+print("Retrieved classes:", [filename_mapping.get(f) for f in q["samples"]])
+
 
 acc= top_k_accuracy(results, filename_mapping)
 prec= precision_at_k(results, filename_mapping)
