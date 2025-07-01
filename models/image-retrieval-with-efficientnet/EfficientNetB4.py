@@ -98,11 +98,11 @@ for i, query_path in enumerate(query_images):
     similar_idxs = annoy_index.get_nns_by_vector(query_feature, top_n)
     similar_paths = [gallery_images[idx] for idx in similar_idxs]
 
-    strip_img = create_image_strip(query_path, similar_paths)
+    # strip_img = create_image_strip(query_path, similar_paths)
     # cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
     # Commented out cv2.imshow line above per instructions
 
-    print("Showing query images with top 10 similar gallery images.")
+    # print("Showing query images with top 10 similar gallery images.")
     # cv2.waitKey(2000)
     # Commented out cv2.waitKey line above per instructions
     
@@ -120,10 +120,10 @@ for i, query_path in enumerate(query_images):
     results[query_fname] = gallery_fnames
 
     # Show images strip
-    strip_img = create_image_strip(query_path, similar_paths)
+    #strip_img = create_image_strip(query_path, similar_paths)
     # cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
     # Commented out cv2.imshow line above per instructions
-    print("Showing query images with top 10 similar gallery images.")
+    #print("Showing query images with top 10 similar gallery images.")
     # cv2.waitKey(2000)
     # Commented out cv2.waitKey line above per instructions
 
