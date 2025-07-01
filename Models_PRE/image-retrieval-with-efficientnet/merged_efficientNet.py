@@ -6,11 +6,12 @@ import cv2
 import numpy as np
 import tensorflow as tf
 from annoy import AnnoyIndex
-from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
 
 # --- Paths and Setup ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.abspath(os.path.join(BASE_DIR, "..")))
+from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
+
 #from submit import submit
 
 # --- EfficientNetB4 Model ---
