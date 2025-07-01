@@ -5,6 +5,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
 from submit import submit
 import json
+import random
 import torch
 from PIL import Image
 from tqdm import tqdm
@@ -13,7 +14,7 @@ import matplotlib.pyplot as plt
 import torchvision.models as models
 import torchvision.transforms as T
 from tensorflow.keras.models import load_model
-from metrics import build_filename_to_class_mapping, precision_at_k
+from metrics import build_filename_to_class_mapping, precision_at_k, top_k_accuracy
 
 # Controlla se esiste il modello fine-tuned
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -39,12 +40,29 @@ transform = T.Compose([
     T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
+preprocess = transform
+
 print("🔍 Caricamento modello VGG16 fine-tuned...")
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = load_model(FINETUNED_MODEL_PATH)
 model = torch.nn.Sequential(*list(models.vgg16().features)).eval().to(device)  # Dummy per compatibilità
 
+# Utility to sample random queries from training
+def sample_random_queries_from_training(training_dir, num_queries=20, preprocess_fn=None):
+    all_images = []
+    for root, _, files in os.walk(training_dir):
+        for file in files:
+            if file.lower().endswith((".jpg", ".jpeg", ".png")):
+                all_images.append(os.path.join(root, file))
+    print(f"📸 Totale immagini trovate nel training set: {len(all_images)}")
 
+    if len(all_images) < num_queries:
+        raise ValueError(f"Not enough images in {training_dir} to sample {num_queries} queries. Found {len(all_images)}.")
+
+    selected_paths = random.sample(all_images, num_queries)
+    selected_filenames = [os.path.basename(p) for p in selected_paths]
+    images = [preprocess_fn(Image.open(p).convert("RGB")) for p in selected_paths] if preprocess_fn else selected_paths
+    return images, selected_filenames, selected_paths
 
 def extract_features(model, images, batch_size=16):
     model.eval()
@@ -61,16 +79,19 @@ def extract_features(model, images, batch_size=16):
     return torch.cat(all_features).to(device)
 
 def load_images_from_folder(folder):
-    images, filenames = [], []
-    for fname in sorted(os.listdir(folder)):
-        path = os.path.join(folder, fname)
-        if os.path.isfile(path) and fname.lower().endswith(('.jpg', '.jpeg', '.png')):
-            try:
-                img = transform(Image.open(path).convert("RGB"))
-                images.append(img)
-                filenames.append(fname)
-            except Exception as e:
-                print(f"Errore con {fname}: {e}")
+    print(f"🔍 Trying to load images recursively from: {folder}")
+    images = []
+    filenames = []
+    for root, _, files in os.walk(folder):
+        for fname in sorted(files):
+            if fname.lower().endswith(('.jpg', '.jpeg', '.png')):
+                path = os.path.join(root, fname)
+                try:
+                    img = preprocess(Image.open(path).convert("RGB"))
+                    images.append(img)
+                    filenames.append(fname)
+                except Exception as e:
+                    print(f"Errore con {fname}: {e}")
     return images, filenames
 
 # --- Visualizzazione risultati ---
@@ -92,16 +113,34 @@ def show_retrieval_results(query_dir, gallery_dir, results):
         plt.tight_layout()
         plt.show()
 
-print("📥 Caricamento immagini gallery...")
-gallery_images, gallery_filenames = load_images_from_folder(GALLERY_DIR)
-print(f"✅ Gallery: {len(gallery_images)} immagini")
+print("🔄 Selezione casuale di 20 immagini query dal training set...")
+query_images, query_filenames, query_paths = sample_random_queries_from_training(TRAIN_DIR, 20, preprocess)
+print(f"✅ {len(query_images)} immagini query selezionate")
 
-print("📈 Estrazione feature gallery...")
+print("🔄 Caricamento immagini gallery...")
+gallery_images, gallery_filenames = load_images_from_folder(TRAIN_DIR)
+# Escludi le immagini usate come query
+query_filenames_set = set(os.path.basename(p) for p in query_paths)
+print(f"🧪 Totale immagini originali nella gallery: {len(gallery_images)}")
+print(f"🔍 Filtrando su nomi query: {query_filenames_set}")
+intersecting_names = set(gallery_filenames) & query_filenames_set
+print(f"🔗 Nomi in comune tra query e gallery: {intersecting_names}")
+filtered_gallery = [(img, fname) for img, fname in zip(gallery_images, gallery_filenames) if fname not in query_filenames_set]
+if filtered_gallery:
+    gallery_images, gallery_filenames = zip(*filtered_gallery)
+else:
+    print("⚠️ Nessuna immagine nella gallery dopo il filtraggio. Riutilizzo tutte le immagini tranne la prima come fallback.")
+    gallery_images, gallery_filenames = zip(*[
+        (img, fname) for img, fname in zip(gallery_images, gallery_filenames)
+        if fname != query_filenames[0]
+    ])
+print(f"🔍 Immagini nella gallery dopo filtraggio: {len(gallery_images)}")
+if not gallery_images:
+    raise ValueError("❌ Nessuna immagine nella gallery dopo il filtraggio. Verifica che le immagini query non coincidano con tutte le immagini del training set.")
+print(f"✅ {len(gallery_images)} immagini caricate nella gallery")
+
+print("🔄 Estrazione feature gallery...")
 gallery_features = extract_features(model, gallery_images)
-
-print("📥 Caricamento immagini query...")
-query_images, query_filenames = load_images_from_folder(QUERY_DIR)
-print(f"✅ Query: {len(query_images)} immagini")
 
 print("🔎 Retrieval...")
 query_features = extract_features(model, query_images)
@@ -120,8 +159,10 @@ with open(OUTPUT_FILE, 'w') as f:
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
 file_name_mapping = build_filename_to_class_mapping(TRAIN_DIR)
-accuracy = precision_at_k(results, file_name_mapping, 10)
+precision = precision_at_k(results, file_name_mapping, 10)
+accuracy = top_k_accuracy(results, file_name_mapping, 10)
 
+print(precision)
 print(accuracy)
 
 # submit(results, "Py.tatine")
