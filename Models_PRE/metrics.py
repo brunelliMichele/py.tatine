@@ -1,6 +1,4 @@
 import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-dataset_dir = os.path.join(BASE_DIR, "..", "data_preEval", "training")
 
 def build_filename_to_class_mapping(dataset_dir):
     """
@@ -12,8 +10,7 @@ def build_filename_to_class_mapping(dataset_dir):
         for f in files:
             if f.lower().endswith((".jpg", ".jpeg", ".png")):
                 class_name = os.path.basename(root)
-                mapping[f] = class_name
-                print(f"[MAPPING] {f} → {class_name}")
+                mapping[os.path.basename(f)] = class_name
     return mapping
 
 def top_k_accuracy(res, filename_to_class, k=10):
@@ -45,13 +42,9 @@ def precision_at_k(res, filename_to_class, k=10):
         if q_class is None:
             continue
         retrieved_classes = [filename_to_class.get(f) for f in retrieved_files[:k]]
-        print(f"[DEBUG] Query: {qfile} → Classe: {q_class}")
-        print(f"[DEBUG] Retrieved files: {retrieved_files[:k]}")
-        print(f"[DEBUG] Retrieved classes (top-{k}): {retrieved_classes}")
         correct = sum(1 for c in retrieved_classes if c == q_class)
         total_precision += correct / k
         total_queries += 1
     avg_precision = total_precision / total_queries if total_queries > 0 else 0.0
-    print(f"[DEBUG] Total queries evaluated: {total_queries}")
     print(f"[METRIC] Precision@{k}: {avg_precision:.4f}")
     return avg_precision

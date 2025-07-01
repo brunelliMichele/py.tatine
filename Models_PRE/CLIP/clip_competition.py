@@ -18,7 +18,7 @@ from metrics import build_filename_to_class_mapping, precision_at_k
 # Paths
 QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "test", "gallery")
-TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data_preEval", "training"))
+TRAIN_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "training")
 
 print(f"Resolved QUERY_DIR: {QUERY_DIR}")
 print(f"Resolved GALLERY_DIR: {GALLERY_DIR}")
