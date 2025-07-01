@@ -96,7 +96,10 @@ def extract_clip_features(model, images, batch_size=16):
             feats = model.encode_image(batch).float()
             feats = feats / feats.norm(dim=-1, keepdim=True)
             all_features.append(feats.cpu())
-    return torch.cat(all_features).to(device)
+    if all_features:
+        return torch.cat(all_features).to(device)
+    else:
+        return torch.empty(0, model.visual.output_dim).to(device)
 
 print("🔄 Selezione casuale di 20 immagini query dal training set...")
 query_images, query_filenames, query_paths = sample_random_queries_from_training(TRAIN_DIR, 20, preprocess)
