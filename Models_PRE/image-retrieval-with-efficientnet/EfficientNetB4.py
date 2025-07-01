@@ -124,7 +124,7 @@ with open(OUTPUT_FILE, "w") as f:
 print(f"\n✅ Retrieval complete. Results saved to '{OUTPUT_FILE}'.")
 #submit(results, "Py.tatine")
 
-dataset_dir = os.path.join(BASE_DIR, "..", "data_preEval", "training")
+dataset_dir = os.path.join(BASE_DIR, "..","..", "data_preEval", "training")
 
 filename_mapping = build_filename_to_class_mapping(dataset_dir)
 
