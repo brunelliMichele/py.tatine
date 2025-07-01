@@ -37,13 +37,15 @@ def load_images_from_folder(folder):
     images, filenames = [], []
     for fname in sorted(os.listdir(folder)):
         path = os.path.join(folder, fname)
+        print("🖼️ Scanning:", path)  # 👈 add this
         if os.path.isfile(path) and fname.lower().endswith(('.jpg', '.jpeg', '.png')):
             try:
                 img = transform(Image.open(path).convert("RGB"))
                 images.append(img)
                 filenames.append(fname)
             except Exception as e:
-                print(f"Errore con {fname}: {e}")
+                print(f"❌ Error loading {fname}: {e}")
+    print(f"✅ Loaded {len(images)} images.")
     return torch.stack(images).to(device), filenames
 
 def extract_cls(model, images):
