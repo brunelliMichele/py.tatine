@@ -91,6 +91,13 @@ print(f"\n✅ Retrieval complete. Results saved to '{OUTPUT_FILE}'.")
 dataset_dir = os.path.join(BASE_DIR, "..", "data_preEval", "training")
 
 filename_mapping = build_filename_to_class_mapping(dataset_dir)
+print("🔎 Classes found:", set(filename_mapping.values()))
+print("🗂 Mapping keys (filenames):", list(filename_mapping.keys())[:5])
+print("📄 Result keys (query images):", list(results.keys())[:5])
+for query, retrieved in list(results.items())[:1]:
+    print("Query:", query, "| Class:", filename_mapping.get(query))
+    print("Retrieved:", retrieved)
+    print("Retrieved classes:", [filename_mapping.get(f) for f in retrieved])
 
 acc= top_k_accuracy(results, filename_mapping)
 prec= precision_at_k(results, filename_mapping)
