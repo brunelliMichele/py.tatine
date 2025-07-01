@@ -122,17 +122,15 @@ def retrieve():
     with open(OUTPUT_FILE, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"Results saved to {OUTPUT_FILE}")
+    return results
 
 #    submit(results, "Py.tatine")
 
 if __name__ == '__main__':
     train()
-    retrieve()
-
-filename_mapping = build_filename_to_class_mapping(GALLERY_DIR)
-
-acc = top_k_accuracy(results, filename_mapping)
-prec = precision_at_k(results, filename_mapping)
-
-print("Accuracy =", acc)
-print("Precision =", prec)
+    results = retrieve()  # capture returned results
+    filename_mapping = build_filename_to_class_mapping(GALLERY_DIR)
+    acc = top_k_accuracy(results, filename_mapping)
+    prec = precision_at_k(results, filename_mapping)
+    print("Accuracy =", acc)
+    print("Precision =", prec)
