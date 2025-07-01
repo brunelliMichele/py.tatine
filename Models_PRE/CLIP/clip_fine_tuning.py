@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
 import json
 import torch
 import clip
+import random
 from PIL import Image
 from tqdm import tqdm
 import numpy as np
