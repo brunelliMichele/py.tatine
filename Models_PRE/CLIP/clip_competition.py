@@ -110,6 +110,10 @@ print("🔄 Caricamento immagini gallery...")
 gallery_images, gallery_filenames = load_images_from_folder(TRAIN_DIR)
 # Escludi le immagini usate come query
 query_filenames_set = set(os.path.basename(p) for p in query_paths)
+print(f"🧪 Totale immagini originali nella gallery: {len(gallery_images)}")
+print(f"🔍 Filtrando su nomi query: {query_filenames_set}")
+intersecting_names = set(gallery_filenames) & query_filenames_set
+print(f"🔗 Nomi in comune tra query e gallery: {intersecting_names}")
 filtered_gallery = [(img, fname) for img, fname in zip(gallery_images, gallery_filenames) if fname not in query_filenames_set]
 if filtered_gallery:
     gallery_images, gallery_filenames = zip(*filtered_gallery)
