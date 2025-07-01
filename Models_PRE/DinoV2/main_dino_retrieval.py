@@ -35,17 +35,19 @@ model.eval().to(device)
 # Funzioni
 def load_images_from_folder(folder):
     images, filenames = [], []
-    for fname in sorted(os.listdir(folder)):
-        path = os.path.join(folder, fname)
-        print("🖼️ Scanning:", path)  # 👈 add this
-        if os.path.isfile(path) and fname.lower().endswith(('.jpg', '.jpeg', '.png')):
-            try:
-                img = transform(Image.open(path).convert("RGB"))
-                images.append(img)
-                filenames.append(fname)
-            except Exception as e:
-                print(f"❌ Error loading {fname}: {e}")
+    for root, _, files in os.walk(folder):
+        for fname in sorted(files):
+            if fname.lower().endswith(('.jpg', '.jpeg', '.png')):
+                path = os.path.join(root, fname)  # ✅ FIX HERE
+                try:
+                    img = transform(Image.open(path).convert("RGB"))
+                    images.append(img)
+                    filenames.append(os.path.basename(fname))  # keep basename for metric match
+                except Exception as e:
+                    print(f"❌ Error loading {fname}: {e}")
     print(f"✅ Loaded {len(images)} images.")
+    if not images:
+        raise RuntimeError("❌ No images were loaded — check folder path or file types.")
     return torch.stack(images).to(device), filenames
 
 def extract_cls(model, images):
