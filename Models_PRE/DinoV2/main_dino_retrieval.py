@@ -7,11 +7,11 @@ from PIL import Image
 import timm
 import torchvision.transforms as T
 #from submit import submit
-from metrics import build_filename_to_class_mapping, precision_at_k, top_k_accuracy
 
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+sys.path.insert(0, os.path.abspath(os.path.join(BASE_DIR, "..")))
+from metrics import build_filename_to_class_mapping, precision_at_k, top_k_accuracy
 
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "training")
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "DINO", "submission.json")
@@ -35,22 +35,31 @@ model.eval().to(device)
 # Funzioni
 def load_images_from_folder(folder):
     images, filenames = [], []
-    for fname in sorted(os.listdir(folder)):
-        path = os.path.join(folder, fname)
-        if os.path.isfile(path) and fname.lower().endswith(('.jpg', '.jpeg', '.png')):
-            try:
-                img = transform(Image.open(path).convert("RGB"))
-                images.append(img)
-                filenames.append(fname)
-            except Exception as e:
-                print(f"Errore con {fname}: {e}")
+    for root, _, files in os.walk(folder):
+        for fname in sorted(files):
+            if fname.lower().endswith(('.jpg', '.jpeg', '.png')):
+                path = os.path.join(root, fname)  # ✅ FIX HERE
+                try:
+                    img = transform(Image.open(path).convert("RGB"))
+                    images.append(img)
+                    filenames.append(os.path.basename(fname))  # keep basename for metric match
+                except Exception as e:
+                    print(f"❌ Error loading {fname}: {e}")
+    print(f"✅ Loaded {len(images)} images.")
+    if not images:
+        raise RuntimeError("❌ No images were loaded — check folder path or file types.")
     return torch.stack(images).to(device), filenames
 
-def extract_cls(model, images):
+def extract_cls(model, images, batch_size=64):
+    all_features = []
     with torch.no_grad():
-        out = model.forward_features(images)
-        cls_tokens = out[:, 0]
-        return cls_tokens / cls_tokens.norm(dim=-1, keepdim=True)
+        for i in range(0, len(images), batch_size):
+            batch = images[i:i + batch_size]
+            out = model.forward_features(batch)
+            cls_tokens = out[:, 0]
+            cls_tokens = cls_tokens / cls_tokens.norm(dim=-1, keepdim=True)
+            all_features.append(cls_tokens)
+    return torch.cat(all_features, dim=0)
 
 # --- Caricamento immagini gallery ---
 print("📥 Caricamento immagini gallery...")
@@ -90,9 +99,17 @@ print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 #submit(results, "Py.tatine")
 
 
-dataset_dir = os.path.join(BASE_DIR, "..", "data_preEval", "training")
+dataset_dir = GALLERY_DIR
 
 filename_mapping = build_filename_to_class_mapping(dataset_dir)
+print("🔎 Classes found:", set(filename_mapping.values()))
+print("🗂 Mapping keys:", list(filename_mapping.keys())[:5])
+print("📄 Query filenames:", [r['filename'] for r in results[:5]])
+q = results[0]
+print("Query:", q["filename"], "| Class:", filename_mapping.get(q["filename"]))
+print("Retrieved:", q["samples"])
+print("Retrieved classes:", [filename_mapping.get(f) for f in q["samples"]])
+
 
 acc= top_k_accuracy(results, filename_mapping)
 prec= precision_at_k(results, filename_mapping)
