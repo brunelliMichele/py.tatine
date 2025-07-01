@@ -21,8 +21,8 @@ GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data", "test", "gallery")
 TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "data", "training"))
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "ResNet", "RN50", "submission.json")
 TOP_K = 10
-MODEL_PATH = os.path.join(BASE_DIR, "..", "resnet50_finetuned.pth")
-TRAINING_SCRIPT = os.path.join(BASE_DIR, "..", "ResNet-Fine-Tuning", "resNet_fine_tuning.py")
+MODEL_PATH = os.path.join(BASE_DIR, "resnet50_finetuned.pth")
+TRAINING_SCRIPT = os.path.join(BASE_DIR, "ResNet-Fine-Tuning", "resNet_fine_tuning.py")
 
 # Controlla se il modello esiste
 if not os.path.exists(MODEL_PATH):

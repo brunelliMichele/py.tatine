@@ -16,3 +16,4 @@ tensorflow>=2.9
 opencv-python
 annoy
 scikit-learn
+faiss-cpu

@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data", "test", "gallery")
 TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "data", "training"))
-MODEL_SAVE_PATH = os.path.join(BASE_DIR, "..", "resnet50_finetuned.pth")
+MODEL_SAVE_PATH = os.path.join(BASE_DIR, "resnet50_finetuned.pth")
 
 # ⚙️ Parametri
 BATCH_SIZE = 32
