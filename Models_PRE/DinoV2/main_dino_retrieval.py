@@ -50,11 +50,16 @@ def load_images_from_folder(folder):
         raise RuntimeError("❌ No images were loaded — check folder path or file types.")
     return torch.stack(images).to(device), filenames
 
-def extract_cls(model, images):
+def extract_cls(model, images, batch_size=64):
+    all_features = []
     with torch.no_grad():
-        out = model.forward_features(images)
-        cls_tokens = out[:, 0]
-        return cls_tokens / cls_tokens.norm(dim=-1, keepdim=True)
+        for i in range(0, len(images), batch_size):
+            batch = images[i:i + batch_size]
+            out = model.forward_features(batch)
+            cls_tokens = out[:, 0]
+            cls_tokens = cls_tokens / cls_tokens.norm(dim=-1, keepdim=True)
+            all_features.append(cls_tokens)
+    return torch.cat(all_features, dim=0)
 
 # --- Caricamento immagini gallery ---
 print("📥 Caricamento immagini gallery...")
