@@ -12,6 +12,10 @@ import torchvision.transforms as T
 from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.abspath(os.path.join(BASE_DIR, "..")))
+
+from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
+
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "training")
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "ResNet", "RN50", "submission.json")
 TOP_K = 10
@@ -90,12 +94,14 @@ with open(OUTPUT_FILE, 'w') as f:
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 #submit(results, "Py.tatine")
 
-dataset_dir = os.path.join(BASE_DIR, "..", "data_preEval", "training")
+dataset_dir = GALLERY_DIR
+
+results_dict = {entry["filename"]: entry["samples"] for entry in results}
 
 filename_mapping = build_filename_to_class_mapping(dataset_dir)
 
-acc= top_k_accuracy(results, filename_mapping)
-prec= precision_at_k(results, filename_mapping)
+acc = top_k_accuracy(results_dict, filename_mapping)
+prec = precision_at_k(results_dict, filename_mapping)
 
 print("Accuracy=", acc)
 print("Precision=", prec)
