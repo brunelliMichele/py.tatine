@@ -9,9 +9,12 @@ import numpy as np
 import torchvision.models as models
 import torchvision.transforms as T
 #from submit import submit
-from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.abspath(os.path.join(BASE_DIR, "..")))
+
+from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
+
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "training")
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "ResNet", "RN50", "submission.json")
 TOP_K = 10
@@ -34,15 +37,19 @@ model.eval().to(device)
 
 def load_images_from_flat_folder(folder):
     images, filenames = [], []
-    for fname in sorted(os.listdir(folder)):
-        path = os.path.join(folder, fname)
-        if os.path.isfile(path) and fname.lower().endswith(('.jpg', '.jpeg', '.png')):
-            try:
-                img = transform(Image.open(path).convert("RGB"))
-                images.append(img)
-                filenames.append(fname)
-            except Exception as e:
-                print(f"Errore con {fname}: {e}")
+    for root, _, files in os.walk(folder):  # 👈 now scans subfolders
+        for fname in sorted(files):
+            if fname.lower().endswith(('.jpg', '.jpeg', '.png')):
+                path = os.path.join(root, fname)
+                try:
+                    img = transform(Image.open(path).convert("RGB"))
+                    images.append(img)
+                    filenames.append(os.path.basename(fname))  # just filename
+                except Exception as e:
+                    print(f"❌ Error loading {fname}: {e}")
+    print(f"✅ Loaded {len(images)} images.")
+    if not images:
+        raise RuntimeError("❌ No images found — check path and format.")
     return torch.stack(images).to(device), filenames
 
 def extract_features(model, images, batch_size=16):
@@ -90,12 +97,14 @@ with open(OUTPUT_FILE, 'w') as f:
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 #submit(results, "Py.tatine")
 
-dataset_dir = os.path.join(BASE_DIR, "..", "data_preEval", "training")
+dataset_dir = GALLERY_DIR
+
+results_dict = {entry["filename"]: entry["samples"] for entry in results}
 
 filename_mapping = build_filename_to_class_mapping(dataset_dir)
 
-acc= top_k_accuracy(results, filename_mapping)
-prec= precision_at_k(results, filename_mapping)
+acc = top_k_accuracy(results_dict, filename_mapping)
+prec = precision_at_k(results_dict, filename_mapping)
 
 print("Accuracy=", acc)
 print("Precision=", prec)
