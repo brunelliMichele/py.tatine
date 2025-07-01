@@ -52,20 +52,19 @@ model, preprocess = clip.load("RN50x64", device=device)
 
 
 def load_images_from_folder(folder):
-    print(f"🔍 Trying to load images from: {folder}")
-    if not os.path.exists(folder):
-        raise FileNotFoundError(f"❌ Directory not found: {folder}")
+    print(f"🔍 Trying to load images recursively from: {folder}")
     images = []
     filenames = []
-    for fname in sorted(os.listdir(folder)):
-        path = os.path.join(folder, fname)
-        if os.path.isfile(path) and fname.lower().endswith(('.jpg', '.jpeg', '.png')):
-            try:
-                img = preprocess(Image.open(path).convert("RGB"))
-                images.append(img)
-                filenames.append(fname)
-            except Exception as e:
-                print(f"Errore con {fname}: {e}")
+    for root, _, files in os.walk(folder):
+        for fname in sorted(files):
+            if fname.lower().endswith(('.jpg', '.jpeg', '.png')):
+                path = os.path.join(root, fname)
+                try:
+                    img = preprocess(Image.open(path).convert("RGB"))
+                    images.append(img)
+                    filenames.append(fname)
+                except Exception as e:
+                    print(f"Errore con {fname}: {e}")
     return images, filenames
 
 def show_retrieval_results(query_dir, gallery_dir, results):
