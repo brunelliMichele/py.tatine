@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1751365049.12664 "main.aux" "main.bbl" "main" 1751365050.95829 0
-  "./main.bib" 1751365048 5055 67f5508c2f585d97c62b5488942b9993 ""
-  "C:/Program Files/MiKTeX/bibtex/bst/bibtex/plain.bst" 1291864736 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "main.aux" 1751365050 4093 1fb462f51617e8c3dcfbab578d8221fe "pdflatex"
+["bibtex main"] 1751365535.14367 "main.aux" "main.bbl" "main" 1751365535.41057 2
+  "./main.bib" 1751365331 5053 2efc677229b5166dda54d84ea15a2fb4 ""
+  "ieee_fullanme.bst" 0 -1 0 ""
+  "main.aux" 1751365527 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1751365049.46544 "c:/Users/anna2/OneDrive/Desktop/py.tatine/report/latex-template/main.tex" "main.pdf" "main" 1751365050.95888 0
+["pdflatex"] 1751365532.95811 "c:/Users/anna2/OneDrive/Desktop/py.tatine/report/latex-template/main.tex" "main.pdf" "main" 1751365534.6518 0
   "C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
   "C:/Program Files/MiKTeX/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136765053 960 379cc0019370a9e0208a0a3f949f847a ""
   "C:/Program Files/MiKTeX/fonts/tfm/adobe/courier/pcrr8r.tfm" 1136765053 1292 bd42be2f344128bff6d35d98474adfe3 ""
@@ -115,17 +115,17 @@
   "C:/Users/anna2/AppData/Local/Programs/MiKTeX/tex/latex/refcount/refcount.sty" 1576433952 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "C:/Users/anna2/AppData/Local/Programs/MiKTeX/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1751104012 9684 a33a14b82ce60d6e77cb9be689d79ee6 ""
   "C:/Users/anna2/AppData/Local/Programs/MiKTeX/tex/latex/silence/silence.sty" 1341995776 18214 5aad5dddd881dee43ad1a83adb336af9 ""
-  "c:/Users/anna2/OneDrive/Desktop/py.tatine/report/latex-template/main.tex" 1751364953 2116 d9b4698c430ebc10006527f0db386d37 ""
+  "c:/Users/anna2/OneDrive/Desktop/py.tatine/report/latex-template/main.tex" 1751365532 2124 0af953222d539ef35893f1550f3969cc ""
   "cvpr.sty" 1751105281 18477 80f163e29385124bdb82ffc8fdde892f ""
-  "main.aux" 1751365050 4093 1fb462f51617e8c3dcfbab578d8221fe "pdflatex"
-  "main.bbl" 1751365049 2625 3cb4bbc37096cbcdf274368441122349 "bibtex main"
-  "main.brf" 1751365050 554 75f657d46bd5320eb80ea74cb2b07011 "pdflatex"
-  "main.out" 1751365050 1773 cb6258b091f48ac4d2742a9fe26ca304 "pdflatex"
-  "main.tex" 1751364953 2116 d9b4698c430ebc10006527f0db386d37 ""
+  "main.aux" 1751365527 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "main.bbl" 1751365535 0 d41d8cd98f00b204e9800998ecf8427e "bibtex main"
+  "main.brf" 1751365533 554 75f657d46bd5320eb80ea74cb2b07011 "pdflatex"
+  "main.out" 0 -1 0 "pdflatex"
+  "main.tex" 1751365532 2124 0af953222d539ef35893f1550f3969cc ""
   "preamble.tex" 1751105281 261 f8555edf8cefc33a517dd4f14f9bcd7f ""
   "sec/0_abstract.tex" 1751105281 911 6f6d227189b8099d8e777aee24ecc1b8 ""
   "sec/1_intro.tex" 1751109150 5045 6981d058aaf71aee267c0c6484640dbd ""
-  "sec/2_formatting.tex" 1751362348 12488 04d4f78ef21d19f34c46a7dee6b4f788 ""
+  "sec/2_formatting.tex" 1751365331 12377 ca3a7ea3831983bdb5c2181485eae9b7 ""
   "sec/3_finalcopy.tex" 1751362116 2169 4c8a6eeaa893e3c8ccf99d81bfbf1838 ""
   "sec/4_discussion.tex" 1751273826 29 3d08879178506804a4858e2fe1ac0792 ""
   (generated)
