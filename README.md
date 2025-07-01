@@ -33,12 +33,13 @@ The repository is organized as follows:
 .
 ├── data/
 │   └── ...
+├── data_preEval/
+│   └── ...
 ├── desktop.ini
 ├── models
 │   ├── CLIP
 │   │   ├── clip_competition.py
-│   │   ├── clip_fine_tuning.py
-│   │   └── clip2.py
+│   │   └── clip_fine_tuning.py
 │   ├── DinoV2
 │   │   └── main_dino_retrieval.py
 │   ├── image-retrieval-with-efficientnet
@@ -46,12 +47,34 @@ The repository is organized as follows:
 │   │   ├── EfficientNetB4.py
 │   │   └── merged_efficientNet.py
 │   ├── manual_submission.py
+│   ├── metrics.py
 │   ├── ResNet
 │   │   ├── main_resnet50_retrieval.py
 │   │   └── ResNet-Fine-Tuning
 │   │       ├── L2-with-CrossEntropy.py
 │   │       └── resNet_fine_tuning.py
-│   ├── submission.json
+│   ├── submit.py
+│   └── VGG16
+│       ├── main_vgg16_retrieval.py
+│       └── VGG16_fine_tuned
+│           └── vgg16_fine_tuning.py
+├── Models_PRE
+│   ├── CLIP
+│   │   ├── clip_competition.py
+│   │   └── clip_fine_tuning.py
+│   ├── DinoV2
+│   │   └── main_dino_retrieval.py
+│   ├── image-retrieval-with-efficientnet
+│   │   ├── EfficientNetB0.py
+│   │   ├── EfficientNetB4.py
+│   │   └── merged_efficientNet.py
+│   ├── manual_submission.py
+│   ├── metrics.py
+│   ├── ResNet
+│   │   ├── main_resnet50_retrieval.py
+│   │   └── ResNet-Fine-Tuning
+│   │       ├── L2-with-CrossEntropy.py
+│   │       └── resNet_fine_tuning.py
 │   ├── submit.py
 │   └── VGG16
 │       ├── main_vgg16_retrieval.py
@@ -105,7 +128,7 @@ data/
 
 | Model        | Type | Variants                  | Fine-tuning | Pooling      | Script(s)                                       |
 |--------------|------|---------------------------|-------------|--------------|-------------------------------------------------|
-| CLIP         | ViT  | ViT-B/32, RN50x64, others | Yes / No    | Internal     | `clip_competition.py`, `clip_fine_tuning.py`, `clip2.py` |
+| CLIP         | ViT  | ViT-B/32, RN50x64, others | Yes / No    | Internal     | `clip_competition.py`, `clip_fine_tuning.py` |
 | DINOv2       | ViT  | facebook/dinov2-base       | No          | GAP          | `main_dino_retrieval.py`                        |
 | EfficientNet | CNN  | B0, B4, merged             | No          | GeM / GAP    | `EfficientNetB0.py`, `EfficientNetB4.py`, `merged_efficientNet.py` |
 | ResNet       | CNN  | ResNet50, fine-tuned       | Yes         | GAP / L2     | `main_resnet50_retrieval.py`, `resNet_fine_tuning.py`, `L2-with-CrossEntropy.py` |
