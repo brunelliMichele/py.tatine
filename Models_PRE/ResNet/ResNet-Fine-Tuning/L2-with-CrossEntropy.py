@@ -123,7 +123,7 @@ def retrieve():
         json.dump(results, f, indent=2)
     print(f"Results saved to {OUTPUT_FILE}")
 
-    submit(results, "Py.tatine")
+#    submit(results, "Py.tatine")
 
 if __name__ == '__main__':
     train()
