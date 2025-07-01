@@ -1,4 +1,3 @@
-
 """
 Attempt with EfficientNet B4 model 
 """
@@ -34,19 +33,25 @@ def extract_features(image_path):
     return features.flatten()
 
 def load_and_prepare_image(path, size=(224, 224)):
-    img = cv2.imread(path)
+    # img = cv2.imread(path)
+    img = None
+    # Commented out cv2.imread line above per instructions
     if img is None:
         raise ValueError(f"Failed to load image: {path}")
-    img = cv2.resize(img, size)
+    # img = cv2.resize(img, size)
+    # Commented out cv2.resize line above per instructions
     if len(img.shape) == 2 or img.shape[2] == 1:
-        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        # img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        pass
+        # Commented out cv2.cvtColor line above per instructions
     return img
 
 def create_image_strip(query_path, similar_paths, size=(224, 224)):
     query_img = load_and_prepare_image(query_path, size)
     thickness = 5
     color = (0, 0, 255)  # Red color in BGR
-    query_img = cv2.rectangle(query_img.copy(), (0, 0), (query_img.shape[1]-1, query_img.shape[0]-1), color, thickness)
+    # query_img = cv2.rectangle(query_img.copy(), (0, 0), (query_img.shape[1]-1, query_img.shape[0]-1), color, thickness)
+    # Commented out cv2.rectangle line above per instructions
 
     
     images = [query_img]
@@ -94,10 +99,12 @@ for i, query_path in enumerate(query_images):
     similar_paths = [gallery_images[idx] for idx in similar_idxs]
 
     strip_img = create_image_strip(query_path, similar_paths)
-    cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
+    # cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
+    # Commented out cv2.imshow line above per instructions
 
     print("Showing query images with top 10 similar gallery images.")
-    cv2.waitKey(2000)
+    # cv2.waitKey(2000)
+    # Commented out cv2.waitKey line above per instructions
     
 
 results = {}
@@ -114,11 +121,14 @@ for i, query_path in enumerate(query_images):
 
     # Show images strip
     strip_img = create_image_strip(query_path, similar_paths)
-    cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
+    # cv2.imshow(f"Query {i+1}: {os.path.basename(query_path)}", strip_img)
+    # Commented out cv2.imshow line above per instructions
     print("Showing query images with top 10 similar gallery images.")
-    cv2.waitKey(2000)
+    # cv2.waitKey(2000)
+    # Commented out cv2.waitKey line above per instructions
 
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
+# Commented out cv2.destroyAllWindows line above per instructions
 
 # Save results JSON in the same folder as the script
 import os
@@ -129,4 +139,4 @@ with open(OUTPUT_FILE, "w") as f:
     json.dump(results, f, indent=2)
 
 print(f"\nRetrieval complete. Results saved to '{OUTPUT_FILE}'.")
-submit(results, "Py.tatine")
+# submit(results, "Py.tatine")

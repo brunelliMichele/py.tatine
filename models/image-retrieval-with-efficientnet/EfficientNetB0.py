@@ -86,4 +86,4 @@ with open(OUTPUT_FILE, "w") as f:
     json.dump(results, f, indent=2)
 
 print(f"Retrieval complete. Results saved to '{OUTPUT_FILE}'.")
-submit(results, "Py.tatine")
+# submit(results, "Py.tatine")

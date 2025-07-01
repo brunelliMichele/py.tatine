@@ -153,7 +153,7 @@ with open(OUTPUT_FILE, 'w') as f:
     json.dump(results, f, indent=2)
 
 print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
-submit(results, "Py.tatine")
+# submit(results, "Py.tatine")
 
 
 # Mostra risultati
