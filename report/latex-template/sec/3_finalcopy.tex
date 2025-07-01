@@ -1,8 +1,20 @@
 \section{Evaluation}
-The following section provides our in-depth analysis of the models the team employed.
-The evaluation analysis, coherently with the organization of the competition, is divided into 2 main phases: pre-competition and post-competition evaluation. 
-Model's performance was assessed obvioulsy on two different datasets and with different metrics, since the dataset and evaluation metrics of the competition were unknown beforehand. 
-Specifically, Kaggle's "blablalba" dataset was employed for testing the models and the performance was evaluated trough Precision@K, i.e. the proportion of 
+This section presents a detailed evaluation of the models developed by our team. Consistent with the structure of the competition, the evaluation is divided into two main phases: pre-competition and post-competition assessment.
+
+Since the official competition dataset and evaluation metric were not available beforehand, we relied on Kaggle’s ".."” dataset, which consists of labeled images of flowers organized into class-specific subfolders. 
+We used the training portion of the dataset to build our gallery set, as the folder structure provided clear ground-truth labels for each image.
+
+To simulate retrieval queries, we randomly selected a subset of images from the dataset's test split. Each query image was assigned its corresponding class label based on its folder of origin. For each query, we performed a top-10 retrieval from the gallery set using our model.
+The evaluation was performed by checking the folder (i.e., class label) of each retrieved image. If a retrieved image came from the same folder as the query image, it was considered a correct match. Otherwise, it was counted as incorrect. 
+Precision@K was then computed as the proportion of correct matches among the top-k retrieved results.
+
+In contrast, the post-competition evaluation was conducted using the official competition dataset and a custom metric designed specifically for the image retrieval task: weighted top-accuracy. This metric not only accounts for whether a relevant image appears in the top-k results but also assigns scores based on its rank. Specifically:
+\begin{itemize}
+\item 600 points are awarded if the correct image is ranked first (top-1 accuracy),
+\item 300 points if it appears within the top-5,
+\item and 100 points if it is among the top-10.
+\end{itemize}
+This ranking-sensitive evaluation incentivizes models to prioritize the most relevant matches at the top of the retrieval list.
 %-------------------------------------------------------------------------
 \subsection{Pre-competition evaluation}
 

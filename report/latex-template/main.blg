@@ -1,53 +1,48 @@
 This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
-Reallocating 'name_of_file' (item size: 1) to 17 items.
-The style file: ieeenat_fullname.bst
+Reallocating 'name_of_file' (item size: 1) to 6 items.
+The style file: plain.bst
 Reallocating 'name_of_file' (item size: 1) to 5 items.
 Database file #1: main.bib
-Repeated entry---line 253 of file main.bib
- : @inproceedings{he2016deep
- :                          ,
-I'm skipping whatever remains of this entry
-You've used 7 entries,
-            2708 wiz_defined-function locations,
-            694 strings with 7324 characters,
-and the built_in function-call counts, 5023 in all, are:
-= -- 386
-> -- 496
+You've used 8 entries,
+            2118 wiz_defined-function locations,
+            612 strings with 6945 characters,
+and the built_in function-call counts, 3982 in all, are:
+= -- 344
+> -- 299
 < -- 3
-+ -- 166
-- -- 159
-* -- 453
-:= -- 802
-add.period$ -- 21
-call.type$ -- 7
-change.case$ -- 72
-chr.to.int$ -- 7
-cite$ -- 14
-duplicate$ -- 177
-empty$ -- 287
-format.name$ -- 168
-if$ -- 1019
-int.to.chr$ -- 1
-int.to.str$ -- 1
-missing$ -- 7
++ -- 119
+- -- 110
+* -- 302
+:= -- 657
+add.period$ -- 24
+call.type$ -- 8
+change.case$ -- 77
+chr.to.int$ -- 0
+cite$ -- 8
+duplicate$ -- 139
+empty$ -- 259
+format.name$ -- 110
+if$ -- 818
+int.to.chr$ -- 0
+int.to.str$ -- 8
+missing$ -- 8
 newline$ -- 43
-num.names$ -- 28
-pop$ -- 160
+num.names$ -- 16
+pop$ -- 102
 preamble$ -- 1
-purify$ -- 65
+purify$ -- 69
 quote$ -- 0
-skip$ -- 162
+skip$ -- 105
 stack$ -- 0
-substring$ -- 86
-swap$ -- 33
-text.length$ -- 2
+substring$ -- 153
+swap$ -- 46
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 77
+type$ -- 32
 warning$ -- 0
-while$ -- 27
-width$ -- 0
-write$ -- 93
-(There was 1 error message)
+while$ -- 25
+width$ -- 9
+write$ -- 85

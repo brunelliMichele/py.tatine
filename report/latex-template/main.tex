@@ -2,6 +2,8 @@
 
 \documentclass[10pt,twocolumn,letterpaper]{article}
 
+
+
 %%%%%%%%% PAPER TYPE  - PLEASE UPDATE FOR FINAL VERSION
 \usepackage{cvpr}              % To produce the CAMERA-READY version
 % \usepackage[review]{cvpr}      % To produce the REVIEW version
@@ -19,6 +21,8 @@
 % (Or just hit 'q' on the first LaTeX run, let it finish, and you should be clear).
 \definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
 \usepackage[pagebackref,breaklinks,colorlinks,allcolors=cvprblue]{hyperref}
+\thispagestyle{empty} % for first page only
+\pagestyle{plain}     % for the rest
 
 %%%%%%%%% PAPER ID  - PLEASE UPDATE
 
@@ -48,11 +52,11 @@ Anna Ferrari\\
 \input{sec/2_formatting}
 \input{sec/3_finalcopy}
 \input{sec/4_discussion}
-{
-    \small
-    \bibliographystyle{ieeenat_fullname}
-    \bibliography{main}
+{\small
+\bibliographystyle{plain}
+\bibliography{main}
 }
+
 
 % WARNING: do not forget to delete the supplementary pages from your submission 
 % \input{sec/X_suppl}

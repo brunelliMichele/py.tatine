@@ -30,7 +30,7 @@ This approach is based on the following intuitions:
 \item {\bf Higher resolution} inputs should be accompanied by proportional increases in both depth and width in order to maintain a balanced and efficient network structure
 \end{itemize}
 
-By coordinating these scaling dimensions through fixed scaling factors, EfficientNet achieves a better trade-off between accuracy and efficiency compared to traditional CNN architectures.
+By coordinating these scaling dimensions through fixed scaling factors, EfficientNet achieves a better trade-off between accuracy and efficiency compared to traditional CNN architectures \cite{tan2019efficientnet}.
 For the competition, we performed feature extraction using EfficientNetB0 and EfficientNetB4 models, both pretrained on ImageNet and accessed via TensorFlow's keras.applications module. 
 To reduce the spatial dimensions of the output feature maps, we applied a Global Average Pooling (GAP) layer, which averages the value of each feature map, transforming a 3D tensor into a 1D vector of fixed length that is more suitable for similarity comparison. 
 For the retrieval task, we used Annoy (Approximate Nearest Neighbors Oh Yeah) to perform fast and memory-efficient nearest neighbor searches. Although the initial implementations used Euclidean distance, we transitioned to cosine similarity, which better suits the nature of deep image embeddings. This was implemented by L2-normalizing the extracted feature vectors before indexing them, ensuring that angular distance (as used by Annoy) corresponds to cosine distance.
