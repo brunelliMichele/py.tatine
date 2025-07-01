@@ -45,9 +45,13 @@ def precision_at_k(res, filename_to_class, k=10):
         if q_class is None:
             continue
         retrieved_classes = [filename_to_class.get(f) for f in retrieved_files[:k]]
+        print(f"[DEBUG] Query: {qfile} → Classe: {q_class}")
+        print(f"[DEBUG] Retrieved files: {retrieved_files[:k]}")
+        print(f"[DEBUG] Retrieved classes (top-{k}): {retrieved_classes}")
         correct = sum(1 for c in retrieved_classes if c == q_class)
         total_precision += correct / k
         total_queries += 1
     avg_precision = total_precision / total_queries if total_queries > 0 else 0.0
+    print(f"[DEBUG] Total queries evaluated: {total_queries}")
     print(f"[METRIC] Precision@{k}: {avg_precision:.4f}")
     return avg_precision
