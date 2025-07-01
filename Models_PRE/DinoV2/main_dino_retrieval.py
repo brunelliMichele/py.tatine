@@ -101,6 +101,8 @@ print(f"✅ Fatto! Output salvato in {OUTPUT_FILE}")
 
 dataset_dir = GALLERY_DIR
 
+results_dict = {entry["filename"]: entry["samples"] for entry in results}
+
 filename_mapping = build_filename_to_class_mapping(dataset_dir)
 print("🔎 Classes found:", set(filename_mapping.values()))
 print("🗂 Mapping keys:", list(filename_mapping.keys())[:5])
@@ -111,8 +113,8 @@ print("Retrieved:", q["samples"])
 print("Retrieved classes:", [filename_mapping.get(f) for f in q["samples"]])
 
 
-acc= top_k_accuracy(results, filename_mapping)
-prec= precision_at_k(results, filename_mapping)
+acc = top_k_accuracy(results_dict, filename_mapping)
+prec = precision_at_k(results_dict, filename_mapping)
 
 print("Accuracy=", acc)
 print("Precision=", prec)
