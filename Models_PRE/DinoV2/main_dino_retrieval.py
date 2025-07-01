@@ -7,11 +7,11 @@ from PIL import Image
 import timm
 import torchvision.transforms as T
 #from submit import submit
-from metrics import build_filename_to_class_mapping, precision_at_k, top_k_accuracy
 
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.abspath(os.path.join(BASE_DIR, "..")))
+from metrics import build_filename_to_class_mapping, precision_at_k, top_k_accuracy
 
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "data_preEval", "training")
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "DINO", "submission.json")
