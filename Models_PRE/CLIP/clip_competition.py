@@ -111,7 +111,14 @@ gallery_images, gallery_filenames = load_images_from_folder(TRAIN_DIR)
 # Escludi le immagini usate come query
 query_filenames_set = set(os.path.basename(p) for p in query_paths)
 filtered_gallery = [(img, fname) for img, fname in zip(gallery_images, gallery_filenames) if fname not in query_filenames_set]
-gallery_images, gallery_filenames = zip(*filtered_gallery) if filtered_gallery else ([], [])
+if filtered_gallery:
+    gallery_images, gallery_filenames = zip(*filtered_gallery)
+else:
+    print("⚠️ Nessuna immagine nella gallery dopo il filtraggio. Riutilizzo tutte le immagini tranne la prima come fallback.")
+    gallery_images, gallery_filenames = zip(*[
+        (img, fname) for img, fname in zip(gallery_images, gallery_filenames)
+        if fname != query_filenames[0]
+    ])
 print(f"🔍 Immagini nella gallery dopo filtraggio: {len(gallery_images)}")
 if not gallery_images:
     raise ValueError("❌ Nessuna immagine nella gallery dopo il filtraggio. Verifica che le immagini query non coincidano con tutte le immagini del training set.")
