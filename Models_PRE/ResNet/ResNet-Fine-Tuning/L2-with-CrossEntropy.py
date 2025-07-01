@@ -2,7 +2,9 @@ import os
 import sys
 # In alto, sotto import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+METRICS_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))  # Goes to Models_PRE
+sys.path.insert(0, METRICS_PATH)
+from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
 from submit import submit
 import json
 import torch
@@ -21,9 +23,12 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 # Configurazione base
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data", "test", "query")
-GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data", "test", "gallery")
-TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "data", "training"))
+DATASET_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "data_preEval", "training"))
+print("🔍 Looking for training data in:", DATASET_DIR)
+print("📂 Exists?", os.path.isdir(DATASET_DIR))
+QUERY_DIR = DATASET_DIR
+GALLERY_DIR = DATASET_DIR
+TRAIN_DIR = DATASET_DIR
 OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "ResNet", "L2_CrossEntropy", "submission.json")
 BATCH_SIZE = 32
 EMBEDDING_SIZE = 512
@@ -84,14 +89,21 @@ def extract_features(directory):
     features = []
     paths = []
     with torch.no_grad():
-        for img_name in tqdm(os.listdir(directory), desc=f"Extracting from {directory}"):
-            img_path = os.path.join(directory, img_name)
-            image = Image.open(img_path).convert('RGB')
-            tensor = transform(image).unsqueeze(0).to(DEVICE)
-            feat = feature_model(tensor).cpu().numpy().flatten()
-            features.append(feat)
-            paths.append(img_path)
+        for root, _, files in os.walk(directory):
+            for img_name in files:
+                if img_name.lower().endswith(('.jpg', '.jpeg', '.png')):
+                    img_path = os.path.join(root, img_name)
+                    try:
+                        image = Image.open(img_path).convert('RGB')
+                        tensor = transform(image).unsqueeze(0).to(DEVICE)
+                        feat = feature_model(tensor).cpu().numpy().flatten()
+                        features.append(feat)
+                        paths.append(os.path.basename(img_path))  # ⚠️ Important for metric key matching
+                    except Exception as e:
+                        print(f"❌ Error with {img_name}: {e}")
+    print(f"✅ Loaded {len(features)} features from {directory}")
     return np.array(features).astype('float32'), paths
+
 # Retrieval
 def retrieve():
     gallery_feats, gallery_paths = extract_features(GALLERY_DIR)
@@ -116,3 +128,11 @@ def retrieve():
 if __name__ == '__main__':
     train()
     retrieve()
+
+filename_mapping = build_filename_to_class_mapping(GALLERY_DIR)
+
+acc = top_k_accuracy(results, filename_mapping)
+prec = precision_at_k(results, filename_mapping)
+
+print("Accuracy =", acc)
+print("Precision =", prec)
