@@ -98,17 +98,21 @@ def extract_clip_features(model, images, batch_size=16):
             all_features.append(feats.cpu())
     return torch.cat(all_features).to(device)
 
+print("🔄 Selezione casuale di 20 immagini query dal training set...")
+query_images, query_filenames, query_paths = sample_random_queries_from_training(TRAIN_DIR, 20, preprocess)
+print(f"✅ {len(query_images)} immagini query selezionate")
+
 print("🔄 Caricamento immagini gallery...")
-gallery_images, gallery_filenames = load_images_from_folder(GALLERY_DIR)
+gallery_images, gallery_filenames = load_images_from_folder(TRAIN_DIR)
+# Escludi le immagini usate come query
+query_filenames_set = set(os.path.basename(p) for p in query_paths)
+filtered_gallery = [(img, fname) for img, fname in zip(gallery_images, gallery_filenames) if fname not in query_filenames_set]
+gallery_images, gallery_filenames = zip(*filtered_gallery) if filtered_gallery else ([], [])
 print(f"✅ {len(gallery_images)} immagini caricate nella gallery")
 
 print("🔄 Estrazione feature gallery...")
 gallery_features = extract_clip_features(model, gallery_images)
 
-
-print("🔄 Selezione casuale di 20 immagini query dal training set...")
-query_images, query_filenames, query_paths = sample_random_queries_from_training(TRAIN_DIR, 20, preprocess)
-print(f"✅ {len(query_images)} immagini query selezionate")
 
 print("🔄 Estrazione feature query e retrieval...")
 results = {}
