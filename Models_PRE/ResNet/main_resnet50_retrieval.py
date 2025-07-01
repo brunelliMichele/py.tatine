@@ -9,7 +9,6 @@ import numpy as np
 import torchvision.models as models
 import torchvision.transforms as T
 #from submit import submit
-from metrics import build_filename_to_class_mapping, top_k_accuracy, precision_at_k
 # Percorsi
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.abspath(os.path.join(BASE_DIR, "..")))
