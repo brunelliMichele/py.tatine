@@ -36,6 +36,7 @@ def sample_random_queries_from_training(training_dir, num_queries=20, preprocess
         for file in files:
             if file.lower().endswith((".jpg", ".jpeg", ".png")):
                 all_images.append(os.path.join(root, file))
+    print(f"📸 Totale immagini trovate nel training set: {len(all_images)}")
 
     if len(all_images) < num_queries:
         raise ValueError(f"Not enough images in {training_dir} to sample {num_queries} queries. Found {len(all_images)}.")
@@ -111,6 +112,9 @@ gallery_images, gallery_filenames = load_images_from_folder(TRAIN_DIR)
 query_filenames_set = set(os.path.basename(p) for p in query_paths)
 filtered_gallery = [(img, fname) for img, fname in zip(gallery_images, gallery_filenames) if fname not in query_filenames_set]
 gallery_images, gallery_filenames = zip(*filtered_gallery) if filtered_gallery else ([], [])
+print(f"🔍 Immagini nella gallery dopo filtraggio: {len(gallery_images)}")
+if not gallery_images:
+    raise ValueError("❌ Nessuna immagine nella gallery dopo il filtraggio. Verifica che le immagini query non coincidano con tutte le immagini del training set.")
 print(f"✅ {len(gallery_images)} immagini caricate nella gallery")
 
 print("🔄 Estrazione feature gallery...")
