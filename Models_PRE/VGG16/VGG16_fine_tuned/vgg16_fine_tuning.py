@@ -13,6 +13,7 @@ sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
 QUERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data_preEval", "test", "query")
 GALLERY_DIR = os.path.join(BASE_DIR, "..", "..", "..", "data_preEval", "test", "gallery")
 TRAIN_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "..", "data_preEval", "training"))
+OUTPUT_PATH = os.path.join(BASE_DIR, "..", "vgg16_finetuned_from_script.keras")
 
 print(f"📁 Verifica cartella di training: {TRAIN_DIR}")
 # Parametri
@@ -76,7 +77,7 @@ model.compile(optimizer=Adam(learning_rate=1e-4), loss='categorical_crossentropy
 
 print(f"💾 Il modello migliore sarà salvato in: vgg16_finetuned_from_script.keras")
 # Salvataggio del modello
-checkpoint = ModelCheckpoint('vgg16_finetuned_from_script.keras', save_best_only=True, monitor='val_accuracy', mode='max')
+checkpoint = ModelCheckpoint(OUTPUT_PATH, save_best_only=True, monitor='val_accuracy', mode='max')
 
 print("🚀 Inizio fase di allenamento...")
 # Allenamento
