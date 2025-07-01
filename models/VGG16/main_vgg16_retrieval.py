@@ -20,7 +20,7 @@ FINETUNED_MODEL_PATH = os.path.join(BASE_DIR, "vgg16_finetuned_from_script.keras
 if not os.path.exists(FINETUNED_MODEL_PATH):
     print("⚠️  Modello fine-tuned non trovato, lo creo ora...")
     import subprocess
-    subprocess.run(["python", os.path.join(BASE_DIR, "..", "VGG16_fine_tuned", "vgg16_fine_tuning.py")], check=True)
+    subprocess.run(["python", os.path.join(BASE_DIR, "VGG16_fine_tuned", "vgg16_fine_tuning.py")], check=True)
 
 
 # Percorsi
