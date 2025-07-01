@@ -17,6 +17,40 @@ In contrast, the post-competition evaluation was conducted using the official co
 This ranking-sensitive evaluation incentivizes models to prioritize the most relevant matches at the top of the retrieval list.
 %-------------------------------------------------------------------------
 \subsection{Pre-competition evaluation}
+The pre-competition evaluation aimed to identify the most promising candidates among several pre-trained models using the Kaggle dataset. Our objective was to determine the optimal hyperparameter configurations for each model to enhance their performance. 
+This strategy allowed us to optimize time management during the competition.
+We compared models based on performance metrics, specifically Precision@K and top-k accuracy, as well as their computational efficiency. 
+Based on these comparisons, we selected a lineup of models to focus on during the competition.
+This approach enabled us to pinpoint the best-performing pre-trained and fine-tuned models for the unknown task in advance, allowing us to concentrate efforts on refining its results on competition day.
+
+The pre-competition evaluation revealed significant performance variation across different achitectural approaches, as shown in Fig.~\ref{fig:output}.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{output.png}
+  \caption{Comparison of model performance using Precision@K on the flower dataset.}
+  \label{fig:output}
+\end{figure}
+
+These results reveal a marked performance gap between self-supervised models such as DINO and CLIP and traditional convolutional neural networks (CNNs). Both DINO and CLIP significantly outperformed traditional CNNs, achieving Precision@K scores above 0.8, with DINO emerging as the top performer.
+
+DINO’s Vision Transformer architecture excels at capturing semantic similarities between flower images. Thanks to its self-supervised learning approach, it effectively learns rich visual representations without requiring explicit labels, resulting in outstanding retrieval performance where semantic understanding is critical.
+
+CLIP, while slightly trailing DINO in precision, demonstrated strong performance despite not being explicitly optimized for single-domain retrieval tasks like ours. This aligns with CLIP’s known robustness in extracting generalizable and discriminative features across varied domains.
+
+Traditional CNN architectures showed moderate but limited performance. Within the EfficientNet family, the larger and more complex B4 variant offered only marginal gains over the more compact B0 version (0.73 vs. 0.72 Precision@K), indicating that architectural enhancements in EfficientNet-B4 provide limited benefit over B0 for this specific task. ResNet-50 exhibited moderate pre-trained performance (0.65), yet we opted to fine-tune it for several key reasons:
+\begin{itemize}
+\item {\bf Proven Architecture}: ResNet-50 is a widely established and extensively studied CNN with a deep architecture known for strong generalization when adapted to new domains.
+
+\item {\bf Modularity and Compatibility}: Its modular design and broad framework support make it an ideal candidate for fine-tuning, offering a favorable balance between complexity and training stability.
+
+\item {\bf Potential for Improvement}: Given the lack of prior domain-specific information for the retrieval task, we hypothesized that fine-tuning ResNet-50 could substantially enhance its retrieval capabilities.
+
+\item {\bf Practical Evaluation}: Fine-tuning a moderately performing model like ResNet-50 allowed us to measure the gains achievable through domain adaptation starting from a non-optimal baseline. This was crucial for assessing the robustness and flexibility of our overall pipeline.
+\end{itemize}
+Conversely, VGG16 performed poorly (Precision@K of 0.085), likely due to its relatively shallow architecture and limited representational capacity compared to more modern networks. Its simpler feature extraction proved insufficient for capturing the nuanced visual similarities necessary for effective retrieval.
+
+Having witnessed the exceptional performance of CLIP and DINO during pre-competition evaluation, we chose to prioritize them for deeper investigation. In particular, CLIP stood out because of its multiple variants, each offering a different trade-off between accuracy and computational requirements. After benchmarking popular CLIP backbones—such as ViT-B/32, ViT-L/14, and RN50x64—we selected the CLIP RN50x64 variant. This model provided the best balance of high retrieval accuracy and moderate computational cost, outperforming the lighter ViT-B/32 and being more resource-efficient than the memory-intensive ViT-L/14. This choice enabled efficient inference without sacrificing performance, making it well-suited for our competition constraints.
 
 %-------------------------------------------------------------------------
 \subsection{Post competition evaluation}
+
