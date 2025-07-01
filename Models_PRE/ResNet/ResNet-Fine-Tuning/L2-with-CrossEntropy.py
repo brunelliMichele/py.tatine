@@ -29,7 +29,7 @@ print("📂 Exists?", os.path.isdir(DATASET_DIR))
 QUERY_DIR = DATASET_DIR
 GALLERY_DIR = DATASET_DIR
 TRAIN_DIR = DATASET_DIR
-OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "results", "ResNet", "L2_CrossEntropy", "submission.json")
+OUTPUT_FILE = os.path.join(BASE_DIR, "..", "..", "..", "results", "ResNet", "RN50", "submission.json")
 BATCH_SIZE = 32
 EMBEDDING_SIZE = 512
 TOP_K = 10
