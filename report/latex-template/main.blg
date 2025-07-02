@@ -1,48 +1,52 @@
-This is BibTeX, Version 0.99d
+This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
-Reallocating 'name_of_file' (item size: 1) to 6 items.
 The style file: plain.bst
-Reallocating 'name_of_file' (item size: 1) to 5 items.
 Database file #1: main.bib
-You've used 8 entries,
+Illegal end of database file---line 139 of file main.bib
+ :   pages={20010--20020}
+ :                       
+I'm skipping whatever remains of this entry
+Warning--I didn't find a database entry for "iijima2024multimodal"
+You've used 9 entries,
             2118 wiz_defined-function locations,
-            612 strings with 6945 characters,
-and the built_in function-call counts, 3982 in all, are:
-= -- 344
-> -- 299
+            617 strings with 7174 characters,
+and the built_in function-call counts, 4285 in all, are:
+= -- 369
+> -- 317
 < -- 3
-+ -- 119
-- -- 110
-* -- 302
-:= -- 657
-add.period$ -- 24
-call.type$ -- 8
-change.case$ -- 77
++ -- 126
+- -- 116
+* -- 320
+:= -- 708
+add.period$ -- 27
+call.type$ -- 9
+change.case$ -- 83
 chr.to.int$ -- 0
-cite$ -- 8
-duplicate$ -- 139
-empty$ -- 259
-format.name$ -- 110
-if$ -- 818
+cite$ -- 9
+duplicate$ -- 153
+empty$ -- 287
+format.name$ -- 116
+if$ -- 882
 int.to.chr$ -- 0
-int.to.str$ -- 8
-missing$ -- 8
-newline$ -- 43
-num.names$ -- 16
-pop$ -- 102
+int.to.str$ -- 9
+missing$ -- 9
+newline$ -- 48
+num.names$ -- 18
+pop$ -- 112
 preamble$ -- 1
-purify$ -- 69
+purify$ -- 74
 quote$ -- 0
-skip$ -- 105
+skip$ -- 112
 stack$ -- 0
-substring$ -- 153
-swap$ -- 46
+substring$ -- 158
+swap$ -- 48
 text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 32
+type$ -- 36
 warning$ -- 0
-while$ -- 25
-width$ -- 9
-write$ -- 85
+while$ -- 27
+width$ -- 10
+write$ -- 95
+(There was 1 error message)
