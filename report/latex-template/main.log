@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.7.1)  2 JUL 2025 12:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.7.1)  2 JUL 2025 14:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -437,7 +437,7 @@ Package pdftex.def Info: output.png  used on input line 29.
 (pdftex.def)             Requested size: 237.13594pt x 141.46484pt.
 
 
-[4]
+[4 <./output.png>]
 
 <output2.png, id=110, 714.7503pt x 426.393pt>
 File: output2.png Graphic file (type png)
@@ -446,11 +446,11 @@ Package pdftex.def Info: output2.png  used on input line 63.
 (pdftex.def)             Requested size: 237.13594pt x 141.46484pt.
 
 
-[5 <./output.png> <./output2.png>]
-
-) (sec/4_discussion.tex) (main.bbl (main.brf)
+[5 <./output2.png>]) (sec/4_discussion.tex) (main.bbl (main.brf)
 \tf@brf=\write4
 \openout4 = `main.brf'.
+
+
 
 )
 
@@ -465,15 +465,15 @@ Package rerunfilecheck Info: File `main.brf' has not changed.
 (rerunfilecheck)             Checksum: 75F657D46BD5320EB80EA74CB2B07011;554.
  ) 
 Here is how much of TeX's memory you used:
- 14827 strings out of 468221
- 245051 string characters out of 5442959
- 706025 words of memory out of 5000000
- 43112 multiletter control sequences out of 15000+600000
- 655381 words of font info for 100 fonts, out of 8000000 for 9000
+ 14829 strings out of 468221
+ 245088 string characters out of 5442959
+ 708025 words of memory out of 5000000
+ 43113 multiletter control sequences out of 15000+600000
+ 657007 words of font info for 102 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  90i,9n,93p,871b,562s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Program Files/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (6 pages, 180908 bytes).
+Output written on main.pdf (6 pages, 184281 bytes).
 PDF statistics:
  158 PDF objects out of 1000 (max. 8388607)
  34 named destinations out of 1000 (max. 500000)

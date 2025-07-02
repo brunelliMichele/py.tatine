@@ -243,7 +243,6 @@ INPUT .\sec\2_formatting.tex
 INPUT sec\2_formatting.tex
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\courier\pcrr7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8r.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
 INPUT .\sec\3_finalcopy.tex
 INPUT .\sec\3_finalcopy.tex
 INPUT .\sec\3_finalcopy.tex
@@ -260,14 +259,15 @@ INPUT .\output.png
 INPUT .\output.png
 INPUT .\output.png
 INPUT .\output.png
-INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\courier\pcrr7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
 INPUT .\output2.png
 INPUT .\output2.png
 INPUT .\output2.png
@@ -275,6 +275,7 @@ INPUT .\output2.png
 INPUT .\output2.png
 INPUT .\output2.png
 INPUT .\output2.png
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
 INPUT .\sec\4_discussion.tex
 INPUT .\sec\4_discussion.tex
 INPUT .\sec\4_discussion.tex
@@ -290,6 +291,8 @@ INPUT .\main.brf
 INPUT .\main.brf
 OUTPUT main.brf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmri7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8r.tfm
 INPUT main.aux
