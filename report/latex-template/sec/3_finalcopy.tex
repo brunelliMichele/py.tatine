@@ -77,9 +77,9 @@ Moreover, in our implementation of the Vision Transformer-based model (DINO), we
 Specifically, we used the output at index 0 of the transformer sequence, which corresponds to this classification token.
 While the CLS token is effective at capturing global semantic information, it is not explicitly trained to focus on fine-grained, identity-specific features such as facial structure or distinguishing characteristics.
 As a result, the model likely encoded more generic visual information, such as background textures, lighting variations, and other contextual elements, which tend to differ significantly between natural and synthetic images.
- This limited its ability to isolate the consistent, identity-preserving features necessary for successful cross-domain celebrity matching.
+This limited its ability to isolate the consistent, identity-preserving features necessary for successful cross-domain celebrity matching.
 
-Traditional CNN architectures exhibited relatively poor performance, with their limitations becoming especially evident in the cross-domain celebrity retrieval task. Among the EfficientNet variants, both the B4 and the merged versions achieved comparable scores (23.02), outperforming the smaller B0 variant (17.32). VGG16 performed the worst, with a Precision@K of only 3.85.
+Traditional CNN architectures exhibited relatively poor performance, with their limitations becoming especially evident in the cross-domain celebrity retrieval task. Among the EfficientNet variants, both the B4 and the merged versions achieved comparable scores (23.02), outperforming the smaller B0 variant (17.32). VGG16 performed the worst, with a top-k accuracy of only 3.85.
 
 However, fine-tuning ResNet-50 led to a significant improvement, boosting its score from 30.58 (baseline) to 51.13 (a 67\% increase) demonstrating that domain adaptation can partially mitigate the challenges posed by cross-domain data when sufficient training samples from both domains are available.
 

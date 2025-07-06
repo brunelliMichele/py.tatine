@@ -1,1 +1,17 @@
 \section{Final Considerations}
+This paper presented a comprehensive investigation of different machine learning architectures, ranging from traditional CNNs to modern foundation and trasnformer-based models, for cross-domain image retrival. 
+The most significant finding was the great superiority of CLIP RN50x64, which achieved a weighted top-k accuracy score of 734.63 out of 1000 points, substantially outperforming all other evaluated approaches. 
+This performance gap was not marginal but substantial, demonstrating a fundamental shift in how semantic understanding translates to retrieval effectiveness. 
+Traditional CNN architectures, even when fine-tuned on domain-specific data, struggled to bridge the natural-to-synthetic domain gap.
+Our use of the "Garden of Eden" flower dataset for pre-competition evaluation, although not perfectly representative of the final task, provided meaningful insights into model capabilities. 
+The notable contrast in performance between DINO (top performer on flowers) and CLIP (top performer on celebrities) underscores how training methodology plays a more crucial role than architectural complexity or robustness.
+This finding underscores that self-supervised learning on natural images (DINO) excels within domains but struggles with cross-domain generalization, while contrastive multimodal training (CLIP) develops more robust semantic representations.
+
+The cross-domain nature of the competition task exposed several limitations in traditional computer vision approaches. Our results demonstrate that pixel-level similarity, as typically captured by CNN features, is insufficient for bridging significant domain gaps. 
+The synthetic images likely exhibited different lighting, textures, and rendering features that "confused" models trained primarily on natural image statistics.
+Among the CLIP variants, RN50x64 was the best suited for this task due to its larger model capacity and more extensive training, which allowed it to learn richer, more discriminative features that better capture semantic identity across domains.
+CLIP RN50x64, in fact, is a vision-language model built on a wide ResNet-50 backbone, with 64 channels per layer, significantly wider than standard ResNet50. Moreover, its architecture integrates contrastive learning to align image and text embeddings in a shared semantic space, enabling robust multimodal representations that generalize well across domains.
+CLIP's exceptional performance illustrates the critical distinction between visual similarity and semantic similarity. While traditional CNNs excel at capturing visual patterns, CLIP's multimodal training enables it to learn conceptual relationships that transcend superficial visual differences, without the need for fine-tuning on specific datasets, as demonstrated by Iijima \textit{et al.} ~\cite{iijima2024multimodal}. 
+This capability proved essential for recognizing that a natural photograph and its AI-generated synthetic version represent the same individual, despite substantial visual differences. 
+CLIP's success suggests that exposure to diverse visual-textual pairs during pre-training creates feature representations that naturally focus on semantically meaningful, identity-preserving characteristics rather than domain-specific patterns.
+
