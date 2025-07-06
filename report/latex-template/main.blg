@@ -1,43 +1,13 @@
 This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
-<<<<<<< HEAD
-The style file: unsrt.bst
-Database file #1: main.bib
-Warning--I didn't find a database entry for "iijima2024multimodal"
-You've used 9 entries,
-            1791 wiz_defined-function locations,
-            546 strings with 6598 characters,
-and the built_in function-call counts, 2985 in all, are:
-= -- 224
-> -- 192
-< -- 4
-+ -- 67
-- -- 58
-* -- 192
-:= -- 448
-add.period$ -- 27
-call.type$ -- 9
-change.case$ -- 9
-chr.to.int$ -- 0
-cite$ -- 9
-duplicate$ -- 148
-empty$ -- 279
-format.name$ -- 58
-if$ -- 685
-=======
 Reallocating 'name_of_file' (item size: 1) to 6 items.
 The style file: plain.bst
 Reallocating 'name_of_file' (item size: 1) to 5 items.
 Database file #1: main.bib
-I was expecting a `,' or a `}'---line 299 of file main.bib
- : 
- : >>>>>>> b1c494a13bd2d1080d2b4a191364df35631652b7
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
 You've used 10 entries,
             2118 wiz_defined-function locations,
-            622 strings with 7321 characters,
+            602 strings with 7208 characters,
 and the built_in function-call counts, 4817 in all, are:
 = -- 427
 > -- 335
@@ -55,31 +25,9 @@ duplicate$ -- 173
 empty$ -- 328
 format.name$ -- 122
 if$ -- 1006
->>>>>>> 0f4584c942d2e2e625f1ba8b65dc110ab6d2c222
 int.to.chr$ -- 0
 int.to.str$ -- 10
 missing$ -- 9
-<<<<<<< HEAD
-newline$ -- 48
-num.names$ -- 9
-pop$ -- 55
-preamble$ -- 1
-purify$ -- 0
-quote$ -- 0
-skip$ -- 93
-stack$ -- 0
-substring$ -- 160
-swap$ -- 61
-text.length$ -- 4
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 0
-warning$ -- 0
-while$ -- 21
-width$ -- 10
-write$ -- 96
-(There was 1 warning)
-=======
 newline$ -- 53
 num.names$ -- 20
 pop$ -- 122
@@ -98,5 +46,3 @@ warning$ -- 0
 while$ -- 32
 width$ -- 12
 write$ -- 106
-(There was 1 error message)
->>>>>>> 0f4584c942d2e2e625f1ba8b65dc110ab6d2c222
