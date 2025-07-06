@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.7.1)  6 JUL 2025 20:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.7.1)  6 JUL 2025 20:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -454,37 +454,39 @@ Package pdftex.def Info: output.png  used on input line 29.
 (pdftex.def)             Requested size: 237.13594pt x 141.46484pt.
 
 
-[4 <./output.png>]
+[4]
 
-<output2.png, id=114, 714.7503pt x 426.393pt>
+<output2.png, id=113, 714.7503pt x 426.393pt>
 File: output2.png Graphic file (type png)
 <use output2.png>
 Package pdftex.def Info: output2.png  used on input line 63.
 (pdftex.def)             Requested size: 237.13594pt x 141.46484pt.
 
 
-[5 <./output2.png>]) (sec/4_discussion.tex
+[5 <./output.png> <./output2.png>]
 
+) (sec/4_discussion.tex
 
-
-[6]
-
-) (sec/5_workload.tex
+[6]) (sec/5_workload.tex
 Overfull \hbox (12.47722pt too wide) in paragraph at lines 7--38
  [][] 
  []
 
 )
 
-[7] (main.bbl (main.brf)
+(main.bbl (main.brf)
 \tf@brf=\write4
 \openout4 = `main.brf'.
 
 
 
-)
+[7])
 
-[8] (main.aux)
+
+
+[8
+
+] (main.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-06-09>
@@ -492,20 +494,20 @@ L3 programming layer <2025-06-09>
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 9539971CC66A909D5B2D63DE1B337CAD;1905.
 Package rerunfilecheck Info: File `main.brf' has not changed.
-(rerunfilecheck)             Checksum: B74AFE223CAFBC173ACF8DCD15AA6C52;751.
+(rerunfilecheck)             Checksum: 56F57B5C86ED829A163A920AB3A2AF42;699.
  ) 
 Here is how much of TeX's memory you used:
  14985 strings out of 468221
  247622 string characters out of 5442959
- 709874 words of memory out of 5000000
+ 708010 words of memory out of 5000000
  43253 multiletter control sequences out of 15000+600000
  658341 words of font info for 104 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 90i,13n,93p,1042b,562s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,13n,93p,1173b,579s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Program Files/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (8 pages, 194224 bytes).
+Output written on main.pdf (8 pages, 192165 bytes).
 PDF statistics:
- 185 PDF objects out of 1000 (max. 8388607)
+ 184 PDF objects out of 1000 (max. 8388607)
  40 named destinations out of 1000 (max. 500000)
  131 words of extra memory for PDF output out of 10000 (max. 10000000)
 

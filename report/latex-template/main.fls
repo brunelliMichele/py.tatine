@@ -270,15 +270,15 @@ INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\courier\pcrr7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8r.tfm
+INPUT .\output2.png
+INPUT .\output2.png
+INPUT .\output2.png
+INPUT .\output2.png
+INPUT .\output2.png
+INPUT .\output2.png
+INPUT .\output2.png
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
-INPUT .\output2.png
-INPUT .\output2.png
-INPUT .\output2.png
-INPUT .\output2.png
-INPUT .\output2.png
-INPUT .\output2.png
-INPUT .\output2.png
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
 INPUT .\sec\4_discussion.tex
 INPUT .\sec\4_discussion.tex
