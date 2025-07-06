@@ -8,6 +8,8 @@
 \usepackage{cvpr}              % To produce the CAMERA-READY version
 % \usepackage[review]{cvpr}      % To produce the REVIEW version
 % \usepackage[pagenumbers]{cvpr} % To force page numbers, e.g. for an arXiv version
+\usepackage[backend=biber, syle=numeric, sorting=none]{biblatex}
+\addbibersource(main.bib)
 
 % Import additional packages in the preamble file, before hyperref
 \input{preamble}
@@ -52,8 +54,9 @@ Anna Ferrari\\
 \input{sec/2_formatting}
 \input{sec/3_finalcopy}
 \input{sec/4_discussion}
+\input{sec/5_workload.tex}
 {\small
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{main}
 }
 
