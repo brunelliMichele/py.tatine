@@ -82,30 +82,31 @@ The repository is organized as follows:
 │           └── vgg16_fine_tuning.py
 ├── README.md
 ├── report/
+│   ├── final_report.pdf
 │   └── ...
 ├── requirements.txt
 ├── results
 │   ├── CLIP
 │   │   ├── fine-tuning/
-│           └── ...
+│           └── submission.json
 │   │   └── RN50x64/
-│           └── ...
+│           └── submission.json
 │   ├── DINO/
-│       └── ...
+│       └── submission.json
 │   ├── EfficientNet
 │   │   ├── B0/
-│           └── ...
+│           └── submission.json
 │   │   ├── B4/
-│           └── ...
+│           └── submission.json
 │   │   └── merged/
-│           └── ...
+│           └── submission.json
 │   ├── ResNet
 │   │   ├── L2_CrossEntropy/
-│           └── ...
+│           └── submission.json
 │   │   └── RN50/
-│           └── ...
+│           └── submission.json
 │   └── VGG16/
-        └── ...
+        └── submission.json
 ```
 
 
@@ -136,7 +137,7 @@ data/
 
 ## Report 
 
-A full technical report is provided under `report/todo.pdf`, detailing all experimental settings, implementation choices, and results.
+A full technical report is provided under `report/final_report.pdf`, detailing all experimental settings, implementation choices, and results.
 
 ## Authors
 This project was created by **Py.Tatine group** of the **Introduction to Machine Learning course** in the Master degree in **Data Science** at the University of Trento (Academic Year 2024–2025).

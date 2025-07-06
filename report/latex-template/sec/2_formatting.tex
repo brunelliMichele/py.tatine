@@ -47,7 +47,7 @@ The attempt to fine-tune EfficientNet did not provide meaningful improvement in 
 \subsection{ResNet}
 
 ResNet (Residual Networks) is a deep convolutional neural network architecture and it introduces residual (or skip) connections, which allow gradients to flow directly through the network, enabling training of much deeper architecture.
-OOur investigation employed three distinct ResNet-based approaches for content-based image retrieval, each implementing different transfer learning paradigms and similarity computation methodologies.
+Our investigation employed three distinct ResNet-based approaches for content-based image retrieval, each implementing different transfer learning paradigms and similarity computation methodologies.
 We utilized a pre-trained ResNet50 model as a fixed feature extractor, leveraging representations learned from ImageNet classification. 
 The network's final fully connected layer was replaced with an identity mapping, transforming the model from a classifier to a feature encoder. This modification enabled extraction of 2048-dimensional feature vectors from the global average pooling layer preceding the original classification head.
 L2-normalized feature vectors were compared using cosine distance to find the 10 most similar images to the query. 
