@@ -1,4 +1,10 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{amir2021deep}
+Ronen Amir, Laurens van~der Maaten, and Ishan Misra.
+\newblock Deep clustering and unsupervised learning of visual features.
+\newblock In {\em Proceedings of the IEEE/CVF Conference on Computer Vision and
+  Pattern Recognition}, pages 20010--20020, 2021.
 
 \bibitem{caron2021emerging}
 Mathilde Caron, Hugo Touvron, Ishan Misra, Herv{\'e} J{\'e}gou, Julien Mairal,
@@ -29,6 +35,11 @@ Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
 \newblock Deep residual learning for image recognition.
 \newblock In {\em Proceedings of the IEEE conference on computer vision and
   pattern recognition (CVPR)}, pages 770--778, 2016.
+
+\bibitem{iijima2024multimodal}
+Lucas Iijima, Nikolaos Giakoumoglou, and Tania Stathaki.
+\newblock A multimodal approach for cross-domain image retrieval, 2024.
+\newblock Accessed: 2025-07-02.
 
 \bibitem{oquab2023dinov2}
 Maxime Oquab, Thomas Darcet, Thibaut Moutakanni, Alexandre Ram{\'e}, Daniel
